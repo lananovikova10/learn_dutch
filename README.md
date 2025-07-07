@@ -2,6 +2,8 @@
 
 A modern, interactive web application for learning Dutch vocabulary with English translations. Built with React, TypeScript, and Tailwind CSS.
 
+![Screenshot](public/screenshot.png)
+
 ## ✨ Features
 
 - 📚 **Interactive Vocabulary Learning**: Practice Dutch-English word pairs from CSV data
