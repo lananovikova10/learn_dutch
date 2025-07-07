@@ -42,12 +42,14 @@ const InputField: React.FC<InputFieldProps> = ({
     e.preventDefault();
     if (value.trim() && !disabled) {
       onSubmit(value.trim());
+      setValue(''); // 🧹 Clear input immediately after submission
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && value.trim() && !disabled) {
       onSubmit(value.trim());
+      setValue(''); // 🧹 Clear input immediately after submission
     }
   };
 
