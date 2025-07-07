@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* Custom utilities for your beautiful Dutch learning app */
+@layer utilities {
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .bg-gradient-secondary {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    }
+
+    .bg-gradient-error {
+        background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+    }
+
+    .input-glow {
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .card-glow {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+            0 2px 8px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Text color utilities for better contrast */
+    .text-primary {
+        color: #1f2937; /* Dark gray for light backgrounds */
+    }
+
+    .text-primary-light {
+        color: #ffffff; /* White for dark backgrounds */
+    }
+
+    .text-secondary {
+        color: #6b7280; /* Medium gray */
+    }
+
+    .text-secondary-light {
+        color: rgba(255, 255, 255, 0.8); /* More opaque white for better readability */
+    }
+
+    .text-muted {
+        color: #9ca3af; /* Light gray */
+    }
+
+    .text-muted-light {
+        color: rgba(255, 255, 255, 0.6); /* Better contrast white */
+    }
+
+    /* Input styling with proper contrast */
+    .input-field {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+    }
+
+    .input-field::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .input-field:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.5);
+        outline: none;
+    }
+
+    /* Card backgrounds with proper contrast */
+    .card-bg {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .card-bg-light {
+        background: rgba(255, 255, 255, 0.95);
+        color: #1f2937;
+    }
+
+    /* Progress bar styling */
+    .progress-bar {
+        background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Button contrast improvements */
+    .btn-primary {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+}
