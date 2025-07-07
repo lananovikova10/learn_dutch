@@ -1,10 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+:root {
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --input-bg: rgba(255, 255, 255, 0.1);
+    --input-border: rgba(255, 255, 255, 0.3);
+    --button-bg: rgba(255, 255, 255, 0.2);
+    --button-hover: rgba(255, 255, 255, 0.3);
+    --progress-bar: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+    --correct-feedback: #10b981;
+    --incorrect-feedback: #ef4444;
+}
+
 /* Custom utilities for your beautiful Dutch learning app */
 @layer utilities {
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--bg-gradient);
     }
 
     .bg-gradient-secondary {
@@ -31,75 +46,89 @@
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
-    /* Text color utilities for better contrast */
+    /* Text color utilities using CSS variables */
     .text-primary {
-        color: #1f2937; /* Dark gray for light backgrounds */
+        color: var(--text-primary);
     }
 
     .text-primary-light {
-        color: #ffffff; /* White for dark backgrounds */
+        color: var(--text-primary);
     }
 
     .text-secondary {
-        color: #6b7280; /* Medium gray */
+        color: var(--text-secondary);
     }
 
     .text-secondary-light {
-        color: rgba(255, 255, 255, 0.8); /* More opaque white for better readability */
+        color: var(--text-secondary);
     }
 
     .text-muted {
-        color: #9ca3af; /* Light gray */
+        color: var(--text-muted);
     }
 
     .text-muted-light {
-        color: rgba(255, 255, 255, 0.6); /* Better contrast white */
+        color: var(--text-muted);
     }
 
-    /* Input styling with proper contrast */
+    /* Input styling with theme variables */
     .input-field {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        color: #ffffff;
+        background: var(--input-bg);
+        border: 2px solid var(--input-border);
+        color: var(--text-primary);
     }
 
     .input-field::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--text-muted);
     }
 
     .input-field:focus {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.5);
+        background: var(--input-bg);
+        border-color: var(--input-border);
         outline: none;
+        opacity: 0.8;
     }
 
-    /* Card backgrounds with proper contrast */
+    /* Card backgrounds with theme variables */
     .card-bg {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--card-bg);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--input-border);
     }
 
     .card-bg-light {
-        background: rgba(255, 255, 255, 0.95);
-        color: #1f2937;
+        background: var(--card-bg);
+        color: var(--text-primary);
     }
 
-    /* Progress bar styling */
+    /* Progress bar styling with theme variables */
     .progress-bar {
-        background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        background: var(--progress-bar);
+        box-shadow: 0 2px 4px rgba(88, 204, 2, 0.3);
     }
 
-    /* Button contrast improvements */
+    /* Button styling with theme variables */
     .btn-primary {
-        background: rgba(255, 255, 255, 0.2);
-        color: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: var(--button-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--input-border);
     }
 
     .btn-primary:hover {
-        background: rgba(255, 255, 255, 0.3);
-        border-color: rgba(255, 255, 255, 0.5);
+        background: var(--button-hover);
+        border-color: var(--input-border);
+    }
+
+    /* Feedback colors using theme variables */
+    .feedback-correct {
+        background: var(--card-bg);
+        border-color: var(--correct-feedback) !important;
+        box-shadow: 0 0 20px rgba(88, 204, 2, 0.3);
+    }
+
+    .feedback-incorrect {
+        background: var(--card-bg);
+        border-color: var(--incorrect-feedback) !important;
+        box-shadow: 0 0 20px rgba(211, 49, 49, 0.3);
     }
 }

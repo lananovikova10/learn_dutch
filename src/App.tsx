@@ -4,6 +4,7 @@ import { loadCSVData } from './utils/csvParser';
 import { fuzzyMatch } from './utils/fuzzyMatch';
 import { WordManager } from './utils/wordManager';
 import { loadProgress, updateProgress, resetProgress } from './utils/storage';
+import { useTheme } from './contexts/ThemeContext';
 
 // Components
 import WordCard from './components/WordCard';
@@ -11,8 +12,10 @@ import InputField from './components/InputField';
 import ModeToggle from './components/ModeToggle';
 import ProgressIndicator from './components/ProgressIndicator';
 import StatsDashboard from './components/StatsDashboard';
+import ThemeChooser from './components/ThemeChooser';
 
 function App() {
+  const { theme, setTheme } = useTheme();
   const [gameState, setGameState] = useState<GameState>({
     currentWord: null,
     mode: 'nl-en',
@@ -168,23 +171,20 @@ function App() {
     <div className="min-h-screen flex flex-col bg-gradient-primary">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-white flex items-center space-x-2">
+        <h1 className="text-2xl font-bold text-primary flex items-center space-x-2">
           <span>🇳🇱</span>
           <span>Dutch Learning</span>
         </h1>
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-4">
+          <ThemeChooser
+            currentTheme={theme}
+            onThemeChange={setTheme}
+          />
           <button
             onClick={() => setShowStats(!showStats)}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-gray-800 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
+            className="btn-primary px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
           >
             Stats
-          </button>
-          <button
-            onClick={handleRestartSession}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-gray-800 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
-            title="Start new session"
-          >
-            New Session
           </button>
         </div>
       </header>
@@ -200,9 +200,9 @@ function App() {
               />
               <button
                 onClick={() => setShowStats(false)}
-                className="w-full mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-gray-800 font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                className="w-full mt-4 btn-primary font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
               >
-                Back to Learning
+                🔙 Back to Learning
               </button>
             </div>
           ) : (
@@ -247,7 +247,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="p-4 text-center text-white text-opacity-50 text-sm">
+      <footer className="p-4 text-center text-muted text-sm">
         <p>Built with ❤️ for Dutch language learners • Press Enter to submit answers</p>
       </footer>
     </div>

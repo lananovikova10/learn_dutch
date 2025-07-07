@@ -31,3 +31,5 @@ export interface GameState {
   isLoading: boolean;
   error: string | null;
 }
+
+export type Theme = 'default' | 'duo';
