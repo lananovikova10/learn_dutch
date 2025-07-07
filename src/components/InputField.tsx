@@ -54,31 +54,20 @@ const InputField: React.FC<InputFieldProps> = ({
   const getFeedbackClasses = (): string => {
       switch (feedback) {
         case 'correct':
-          return 'border-green-400 bg-green-500 bg-opacity-20 text-white placeholder-green-200';
+          return 'border-green-300 bg-green-500 bg-opacity-20 text-white placeholder-green-200';
         case 'incorrect':
-          return 'border-red-400 bg-red-500 bg-opacity-20 text-white placeholder-red-200';
+          return 'border-red-300 bg-red-500 bg-opacity-20 text-white placeholder-red-200';
         default:
-          return 'input-field text-white placeholder-white placeholder-opacity-60';
+          return 'input-field text-white placeholder-white placeholder-opacity-60 border-white border-opacity-20';
       }
     };
 
-  const getIcon = (): string => {
-    switch (feedback) {
-      case 'correct':
-        return '✓';
-      case 'incorrect':
-        return '✗';
-      default:
-        return '';
-    }
-  };
+
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md">
       <div className="relative">
-        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-xl text-white">
-          {getIcon()}
-        </div>
+
 
         <input
           ref={inputRef}
@@ -89,9 +78,9 @@ const InputField: React.FC<InputFieldProps> = ({
           disabled={disabled}
           placeholder={placeholder}
           className={`
-            w-full pl-12 pr-4 py-4 rounded-xl text-lg font-medium
+            w-full pl-4 pr-4 py-4 rounded-xl text-lg font-medium border
             focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30
-            input-glow transition-all duration-300
+            transition-all duration-300
             ${getFeedbackClasses()}
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-opacity-20'}
           `}
@@ -112,14 +101,6 @@ const InputField: React.FC<InputFieldProps> = ({
           </button>
         )}
       </div>
-
-      {feedback && (
-        <div className={`mt-2 text-center text-sm font-medium transition-all duration-300 ${
-          feedback === 'correct' ? 'text-green-200' : 'text-red-200'
-        }`}>
-          {feedback === 'correct' ? 'Correct!' : 'Try again!'}
-        </div>
-      )}
     </form>
   );
 };

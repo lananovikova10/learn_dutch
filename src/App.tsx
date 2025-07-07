@@ -175,16 +175,16 @@ function App() {
         <div className="flex space-x-2">
           <button
             onClick={() => setShowStats(!showStats)}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
+            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-gray-800 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
           >
-            📊 Stats
+            Stats
           </button>
           <button
             onClick={handleRestartSession}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
+            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-gray-800 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
             title="Start new session"
           >
-            🔄 New Session
+            New Session
           </button>
         </div>
       </header>
@@ -200,9 +200,9 @@ function App() {
               />
               <button
                 onClick={() => setShowStats(false)}
-                className="w-full mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                className="w-full mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-gray-800 font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
               >
-                🎯 Back to Learning
+                Back to Learning
               </button>
             </div>
           ) : (

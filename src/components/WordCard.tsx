@@ -42,17 +42,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = f
       }
     };
 
-  const getFeedbackIcon = (): string => {
-    switch (feedback) {
-      case 'correct':
-        return '✅';
-      case 'incorrect':
-        return '❌';
-      default:
-        return '🎯';
-    }
-  };
-
   return (
     <div className={`${getFeedbackClasses()} rounded-xl p-8 text-center transition-all duration-300 border-2 animate-slide-up`}>
       <div className="mb-2">
@@ -65,9 +54,6 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = f
         <h2 className="text-4xl md:text-5xl font-bold text-primary-light mb-2">
           {displayWord}
         </h2>
-        <div className="text-2xl">
-          {getFeedbackIcon()}
-        </div>
       </div>
 
       <div className="text-secondary-light text-sm">
