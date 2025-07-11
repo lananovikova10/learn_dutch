@@ -5,7 +5,7 @@ u,you
 hij,he
 zij/ze,she/they
 het,it
-wij/we,we
+wij,we
 jullie,you
 dit,this
 dat,that
@@ -30,12 +30,12 @@ hallo,hello
 hoi,hi
 tot ziens,goodbye
 doei,bye
-meneer,mister/sir
-mevrouw,madam/mrs
+meneer,sir
+mevrouw,madam
 vriend,friend (m)
 vriendin,friend (f)
-man,man/husband
-vrouw,woman/wife
+man,man
+vrouw,woman
 kind,child
 baby,baby
 jongen,boy
@@ -43,14 +43,14 @@ meisje,girl
 familie,family
 naam,name
 straat,street
-huis,house/home
+huis,house
 stad,city
 dorp,village
 land,country
 werk,work
 school,school
 baan,job
-winkel,shop/store
+winkel,shop
 markt,market
 geld,money
 auto,car
@@ -93,7 +93,7 @@ boter,butter
 suiker,sugar
 zout,salt
 peper,pepper
-eten,food/to eat
+eten,to eat
 drinken,to drink
 koken,to cook
 maken,to make
@@ -102,7 +102,7 @@ schrijven,to write
 spreken,to speak
 zeggen,to say
 luisteren,to listen
-kijken,to look/watch
+kijken,to watch
 zien,to see
 gaan,to go
 komen,to come
@@ -120,9 +120,9 @@ weten,to know
 denken,to think
 voelen,to feel
 willen,to want
-kunnen,can/to be able
-moeten,must/to have to
-mogen,may/to be allowed
+kunnen,can
+moeten,must
+mogen,may
 houden van,to love
 leuk vinden,to like
 helpen,to help
@@ -135,12 +135,12 @@ beginnen,to begin
 eindigen,to finish
 openen,to open
 sluiten,to close
-dragen,to carry/wear
+dragen,to wear
 pakken,to take
 gooien,to throw
 lachen,to laugh
 huilen,to cry
-roepen,to call/yell
+roepen,to call
 wachten,to wait
 vergeten,to forget
 herinneren,to remember
@@ -160,7 +160,7 @@ winnen,to win
 dag,day
 nacht,night
 ochtend,morning
-middag,noon/afternoon
+middag,afternoon
 avond,evening
 tijd,time
 jaar,year
@@ -180,7 +180,7 @@ vandaag,today
 morgen,tomorrow
 groot,big
 klein,small
-lang,long/tall
+lang,long
 kort,short
 nieuw,new
 oud,old
@@ -230,3 +230,1332 @@ tachtig,eighty
 negentig,ninety
 honderd,hundred
 duizend,thousand
+miljoen,million
+de,the
+is,is
+zijn,to be
+er,there
+maar,but
+me,me
+heb,have
+als,as
+ben,am
+was,was
+mijn,my
+hier,here
+om,to
+naar,to
+dan,then
+weet,know
+kan,can
+zo,so
+nog,yet
+wel,well
+moet,must
+hem,him
+heeft,has
+nu,now
+ga,go
+kom,come
+uit,from
+gaan,go
+bent,are
+haar,her
+doen,do
+ook,also
+mij,me
+over,about
+of,or
+daar,there
+zou,would
+al,already
+bij,by
+ons,us
+zal,shall
+gaat,goes
+hebt,have
+meer,more
+iets,something
+laat,late
+deze,this
+had,had
+doe,do
+jou,you
+moeten,must
+alles,everything
+denk,think
+kunnen,can
+eens,once
+echt,really
+weg,way
+door,through
+oké,okay
+toch,yet
+zien,see
+alleen,only
+nou,well
+leven,to live
+mensen,people
+dood,death
+tijd,time
+jaar,year
+maand,month
+week,week
+dag,day
+uur,hour
+minuut,minute
+seconde,second
+geld,money
+prijs,price
+kost,cost
+euro,euro
+cent,cent
+duur,expensive
+goedkoop,cheap
+gratis,free
+betalen,to pay
+kopen,to buy
+verkopen,to sell
+winkel,shop
+markt,market
+supermarkt,supermarket
+restaurant,restaurant
+café,café
+hotel,hotel
+plaats,place
+land,country
+stad,city
+dorp,village
+straat,street
+adres,address
+nummer,number
+telefoon,telephone
+computer,computer
+internet,internet
+e-mail,email
+website,website
+telefonnummer,phone number
+mobiel,mobile
+camera,camera
+foto,photo
+film,film
+video,video
+muziek,music
+lied,song
+boek,book
+krant,newspaper
+tijdschrift,magazine
+televisie,television
+radio,radio
+familie,family
+ouders,parents
+vader,father
+moeder,mother
+zoon,son
+dochter,daughter
+broer,brother
+zus,sister
+opa,grandfather
+oma,grandmother
+oom,uncle
+tante,aunt
+neef,cousin
+nicht,cousin
+huwelijk,marriage
+bruiloft,wedding
+scheiding,divorce
+geboorte,birth
+dood,death
+begrafenis,funeral
+partij,party
+feest,party
+vakantie,vacation
+reis,trip
+vlucht,flight
+hotel,hotel
+camping,camping
+strand,beach
+zee,sea
+meer,lake
+rivier,river
+berg,mountain
+bos,forest
+park,park
+tuin,garden
+boom,tree
+bloem,flower
+gras,grass
+lucht,sky
+zon,sun
+maan,moon
+sterren,stars
+regen,rain
+sneeuw,snow
+wind,wind
+warm,warm
+koud,cold
+heet,hot
+koel,cool
+nat,wet
+droog,dry
+schoon,clean
+vuil,dirty
+licht,light
+donker,dark
+kleur,color
+rood,red
+blauw,blue
+groen,green
+geel,yellow
+wit,white
+zwart,black
+oranje,orange
+paars,purple
+roze,pink
+bruin,brown
+grijs,gray
+lichaam,body
+hoofd,head
+haar,hair
+gezicht,face
+oog,eye
+neus,nose
+mond,mouth
+tand,tooth
+tong,tongue
+oor,ear
+nek,neck
+schouder,shoulder
+arm,arm
+hand,hand
+vinger,finger
+duim,thumb
+been,leg
+voet,foot
+teen,toe
+buik,belly
+rug,back
+huid,skin
+hart,heart
+bloed,blood
+ziekenhuis,hospital
+dokter,doctor
+verpleegster,nurse
+medicijn,medicine
+pijn,pain
+gezond,healthy
+ziek,sick
+ziekte,disease
+verkoudheid,cold
+koorts,fever
+hoofdpijn,headache
+tandpijn,toothache
+sport,sport
+voetbal,football
+tennis,tennis
+zwemmen,swimming
+hardlopen,running
+fietsen,cycling
+wandelen,walking
+spelen,to play
+wedstrijd,match
+team,team
+winnen,to win
+verliezen,to lose
+score,score
+kleding,clothing
+hemd,shirt
+broek,pants
+jurk,dress
+rok,skirt
+jas,jacket
+schoenen,shoes
+sokken,socks
+hoed,hat
+riem,belt
+horloge,watch
+sieraden,jewelry
+ring,ring
+ketting,necklace
+onderwijs,education
+school,school
+leraar,teacher
+leerling,student
+les,lesson
+klas,class
+huiswerk,homework
+examen,exam
+diploma,diploma
+universiteit,university
+studie,study
+baan,job
+kantoor,office
+baas,boss
+collega,colleague
+vergadering,meeting
+project,project
+bedrijf,company
+fabrik,factory
+winst,profit
+verlies,loss
+zakelijk,business
+eten,food
+ontbijt,breakfast
+lunch,lunch
+diner,dinner
+maaltijd,meal
+restaurant,restaurant
+keuken,kitchen
+koken,to cook
+recept,recipe
+smaak,taste
+zoet,sweet
+zout,salty
+zuur,sour
+bitter,bitter
+scherp,sharp
+oud,old
+ouder,older
+oudste,oldest
+nieuw,new
+nieuwer,newer
+nieuwste,newest
+jong,young
+jonger,younger
+jongste,youngest
+groot,big
+groter,bigger
+grootste,biggest
+klein,small
+kleiner,smaller
+kleinste,smallest
+hoog,high
+hoger,higher
+hoogste,highest
+laag,low
+lager,lower
+laagste,lowest
+snel,fast
+sneller,faster
+snelste,fastest
+langzaam,slow
+langzamer,slower
+langzaamste,slowest
+sterk,strong
+sterker,stronger
+sterkste,strongest
+zwak,weak
+zwakker,weaker
+zwakste,weakest
+rijk,rich
+rijker,richer
+rijkste,richest
+arm,poor
+armer,poorer
+armste,poorest
+slim,smart
+slimmer,smarter
+slimste,smartest
+dom,stupid
+dommer,more stupid
+domste,most stupid
+belangrijk,important
+belangrijker,more important
+belangrijkste,most important
+interessant,interesting
+interessanter,more interesting
+interessantste,most interesting
+saai,boring
+saaier,more boring
+saaiste,most boring
+leuk,nice
+leuker,more fun
+leukste,most fun
+vreemd,strange
+vreemder,stranger
+vreemdste,strangest
+normaal,normal
+gewoon,ordinary
+speciaal,special
+verschillend,different
+hetzelfde,the same
+precies,exactly
+bijna,almost
+helemaal,completely
+misschien,maybe
+waarschijnlijk,probably
+zeker,sure
+onzeker,uncertain
+mogelijk,possible
+onmogelijk,impossible
+natuurlijk,naturally
+eindelijk,finally
+plotseling,suddenly
+langzaam,slowly
+voorzichtig,carefully
+hard,hard
+zacht,soft
+stil,quiet
+luid,loud
+open,open
+dicht,closed
+vol,full
+leeg,empty
+links,left
+rechts,right
+boven,above
+onder,below
+binnen,inside
+buiten,outside
+ergens,somewhere
+nergens,nowhere
+overal,everywhere
+eerste,first
+tweede,second
+derde,third
+vierde,fourth
+vijfde,fifth
+zesde,sixth
+zevende,seventh
+achtste,eighth
+negende,ninth
+tiende,tenth
+laatste,last
+volgende,next
+vorige,previous
+begin,beginning
+einde,end
+midden,middle
+kant,side
+deel,part
+stuk,piece
+soort,type
+manier,way
+reden,reason
+probleem,problem
+oplossing,solution
+vraag,question
+antwoord,answer
+idee,idea
+plan,plan
+doel,goal
+resultaat,result
+gevolg,consequence
+kans,chance
+geluk,luck
+pech,bad luck
+succes,success
+fout,mistake
+falen,failure
+keuze,choice
+beslissing,decision
+verandering,change
+verschil,difference
+vergelijking,comparison
+verband,connection
+relatie,relationship
+liefde,love
+haat,hate
+vriendschap,friendship
+vijandschap,enmity
+respect,respect
+vertrouwen,trust
+angst,fear
+moed,courage
+hoop,hope
+wanhoop,despair
+blijdschap,joy
+verdriet,sadness
+boosheid,anger
+jaloezie,jealousy
+trots,pride
+schaamte,shame
+schuld,guilt
+spijt,regret
+vergiffenis,forgiveness
+geduld,patience
+ongeduld,impatience
+wijsheid,wisdom
+domheid,stupidity
+kennis,knowledge
+ervaring,experience
+vaardigheid,skill
+talent,talent
+gave,gift
+mogelijkheid,possibility
+kans,opportunity
+voordeel,advantage
+nadeel,disadvantage
+hulp,help
+steun,support
+advies,advice
+tip,tip
+informatie,information
+nieuws,news
+bericht,message
+brief,letter
+kaart,card
+cadeau,gift
+present,present
+surprise,surprise
+bezoek,visit
+uitnodiging,invitation
+afspraak,appointment
+ontmoeting,meeting
+gesprek,conversation
+discussie,discussion
+ruzie,argument
+conflict,conflict
+oorlog,war
+vrede,peace
+politiek,politics
+regering,government
+president,president
+minister,minister
+wet,law
+regel,rule
+recht,right
+plicht,duty
+vrijheid,freedom
+gevangenis,prison
+politie,police
+rechter,judge
+advocaat,lawyer
+misdaad,crime
+dief,thief
+stelen,to steal
+moord,murder
+doden,to kill
+geweld,violence
+veiligheid,safety
+gevaar,danger
+risico,risk
+bescherming,protection
+hulp,help
+redding,rescue
+noodgeval,emergency
+brand,fire
+ongeluk,accident
+ziekenwagen,ambulance
+brandweer,fire department
+verzekering,insurance
+garantie,guarantee
+contract,contract
+akkoord,agreement
+handtekening,signature
+document,document
+formulier,form
+papier,paper
+pen,pen
+potlood,pencil
+marker,marker
+stift,pen
+gum,eraser
+liniaal,ruler
+schaar,scissors
+lijm,glue
+tape,tape
+map,folder
+tas,bag
+koffer,suitcase
+rugzak,backpack
+portemonnee,wallet
+sleutels,keys
+slot,lock
+veiligheid,security
+alarm,alarm
+systeem,system
+technologie,technology
+machine,machine
+apparaat,device
+instrument,instrument
+gereedschap,tool
+hamer,hammer
+schroef,screw
+spijker,nail
+zaag,saw
+boor,drill
+mes,knife
+vork,fork
+lepel,spoon
+bord,plate
+kom,bowl
+glas,glass
+fles,bottle
+kan,jug
+theepot,teapot
+koffiepot,coffee pot
+pan,pan
+pot,pot
+deksel,lid
+koelkast,refrigerator
+fornuis,stove
+oven,oven
+magnetron,microwave
+wasmachine,washing machine
+droger,dryer
+stofzuiger,vacuum cleaner
+televisie,television
+radio,radio
+computer,computer
+laptop,laptop
+tablet,tablet
+smartphone,smartphone
+telefoon,phone
+internet,internet
+wifi,wifi
+website,website
+e-mail,email
+app,app
+programma,program
+software,software
+hardware,hardware
+data,data
+informatie,information
+bestand,file
+map,folder
+scherm,screen
+toetsenbord,keyboard
+muis,mouse
+printer,printer
+scanner,scanner
+camera,camera
+speaker,speaker
+koptelefoon,headphones
+batterij,battery
+oplader,charger
+kabel,cable
+stekker,plug
+schakelaar,switch
+lamp,lamp
+licht,light
+elektriciteit,electricity
+energie,energy
+stroom,electricity
+gas,gas
+water,water
+riolering,sewage
+afval,waste
+vuilnisbak,trash can
+recycling,recycling
+milieu,environment
+natuur,nature
+klimaat,climate
+weer,weather
+temperatuur,temperature
+graden,degrees
+celsius,celsius
+fahrenheit,fahrenheit
+barometer,barometer
+thermometer,thermometer
+kompas,compass
+kaart,map
+gps,gps
+richting,direction
+noorden,north
+zuiden,south
+oosten,east
+westen,west
+afstand,distance
+kilometer,kilometer
+meter,meter
+centimeter,centimeter
+millimeter,millimeter
+gewicht,weight
+kilogram,kilogram
+gram,gram
+volume,volume
+liter,liter
+snelheid,speed
+per,per
+uur,hour
+minuut,minute
+seconde,second
+beweging,movement
+rust,rest
+stilstand,standstill
+actie,action
+activiteit,activity
+werk,work
+taak,task
+opdracht,assignment
+verantwoordelijkheid,responsibility
+plicht,duty
+rol,role
+functie,function
+positie,position
+rangorde,ranking
+niveau,level
+graad,degree
+kwaliteit,quality
+kwantiteit,quantity
+maat,size
+grootte,size
+vorm,shape
+structuur,structure
+ontwerp,design
+stijl,style
+mode,fashion
+trend,trend
+cultuur,culture
+traditie,tradition
+gewoonte,habit
+ceremonie,ceremony
+ritueel,ritual
+festival,festival
+concert,concert
+theater,theater
+bioscoop,cinema
+museum,museum
+galerie,gallery
+bibliotheek,library
+universiteit,university
+college,college
+instituut,institute
+organisatie,organization
+vereniging,association
+club,club
+team,team
+groep,group
+gemeenschap,community
+samenleving,society
+bevolking,population
+burger,citizen
+inwoner,resident
+buitenlander,foreigner
+toerist,tourist
+bezoeker,visitor
+gast,guest
+gastheer,host
+gastvrouw,hostess
+eigenaar,owner
+baas,boss
+werkgever,employer
+werknemer,employee
+klant,customer
+koper,buyer
+verkoper,seller
+leverancier,supplier
+concurrent,competitor
+partner,partner
+bondgenoot,ally
+vijand,enemy
+vriend,friend
+kennismaking,acquaintance
+buurman,neighbor
+buurvrouw,neighbor
+huisgenoot,housemate
+kamergenoot,roommate
+medebewoner,co-resident
+huisbaas,landlord
+huurder,tenant
+verhuurder,landlord
+makelaar,real estate agent
+architect,architect
+ingenieur,engineer
+technicus,technician
+monteur,mechanic
+elektricien,electrician
+loodgieter,plumber
+schilder,painter
+timmerman,carpenter
+bouwer,builder
+arbeider,worker
+vakman,craftsman
+kunstenaar,artist
+musicus,musician
+zanger,singer
+acteur,actor
+schrijver,writer
+dichter,poet
+journalist,journalist
+fotograaf,photographer
+regisseur,director
+producent,producer
+presentator,presenter
+commentator,commentator
+interviewer,interviewer
+reporter,reporter
+nieuwslezer,news reader
+weerman,weather forecaster
+sportverslaggever,sports reporter
+politicus,politician
+diplomaat,diplomat
+ambassadeur,ambassador
+consul,consul
+minister,minister
+burgemeester,mayor
+raadslid,council member
+parlement,parliament
+senaat,senate
+kamer,chamber
+regering,government
+kabinet,cabinet
+coalitie,coalition
+oppositie,opposition
+partij,party
+verkiezingen,elections
+stemmen,to vote
+stemming,voting
+uitslag,result
+campagne,campaign
+kandidaat,candidate
+leider,leader
+voorzitter,chairman
+secretaris,secretary
+penningmeester,treasurer
+lid,member
+bestuur,board
+commissie,committee
+vergadering,meeting
+conferentie,conference
+symposium,symposium
+seminar,seminar
+workshop,workshop
+training,training
+cursus,course
+les,lesson
+college,lecture
+presentatie,presentation
+lezing,lecture
+toespraak,speech
+debat,debate
+onderzoek,research
+studie,study
+experiment,experiment
+test,test
+proef,trial
+analyse,analysis
+statistiek,statistics
+cijfer,number
+getal,number
+rekening,calculation
+som,sum
+resultaat,result
+uitkomst,outcome
+conclusie,conclusion
+bewijs,proof
+feit,fact
+waarheid,truth
+leugen,lie
+verhaal,story
+sprookje,fairy tale
+mythe,myth
+legende,legend
+geschiedenis,history
+verleden,past
+heden,present
+toekomst,future
+periode,period
+tijdperk,era
+eeuw,century
+decennium,decade
+generatie,generation
+leeftijd,age
+geboorte,birth
+dood,death
+leven,life
+bestaan,existence
+realiteit,reality
+werkelijkheid,reality
+fantasie,fantasy
+verbeelding,imagination
+droom,dream
+nachtmerrie,nightmare
+slaap,sleep
+wakker,awake
+bewustzijn,consciousness
+gedachte,thought
+herinnering,memory
+vergeten,to forget
+herinderen,to remember
+leren,to learn
+onderwijzen,to teach
+uitleggen,to explain
+begrijpen,to understand
+snappen,to get
+bevatten,to grasp
+kennen,to know
+weten,to know
+geloven,to believe
+vertrouwen,to trust
+twijfelen,to doubt
+hopen,to hope
+wensen,to wish
+willen,to want
+verlangen,to desire
+behoeven,to need
+nodig hebben,to need
+vereisen,to require
+eisen,to demand
+verzoeken,to request
+vragen,to ask
+smeken,to beg
+dwingen,to force
+overtuigen,to convince
+overreden,to persuade
+adviseren,to advise
+suggereren,to suggest
+voorstellen,to propose
+aanbieden,to offer
+geven,to give
+schenken,to give
+doneren,to donate
+delen,to share
+verdelen,to divide
+splitsen,to split
+scheiden,to separate
+verenigen,to unite
+samenbrengen,to bring together
+combineren,to combine
+mengen,to mix
+mixen,to mix
+roeren,to stir
+kloppen,to beat
+slaan,to hit
+stoten,to push
+trekken,to pull
+duwen,to push
+tillen,to lift
+dragen,to carry
+brengen,to bring
+halen,to get
+ophalen,to pick up
+wegbrengen,to take away
+meenemen,to take along
+achterlaten,to leave behind
+verlaten,to leave
+vertrekken,to depart
+aankomen,to arrive
+bereiken,to reach
+naderen,to approach
+afstand houden,to keep distance
+vluchten,to flee
+ontsnappen,to escape
+verbergen,to hide
+verstoppen,to hide
+zoeken,to search
+vinden,to find
+ontdekken,to discover
+uitvinden,to invent
+creëren,to create
+maken,to make
+bouwen,to build
+construeren,to construct
+ontwerpen,to design
+plannen,to plan
+organiseren,to organize
+regelen,to arrange
+voorbereiden,to prepare
+klaarmaken,to prepare
+afmaken,to finish
+voltooien,to complete
+eindigen,to end
+stoppen,to stop
+pauzeren,to pause
+onderbreken,to interrupt
+doorgaan,to continue
+hervatten,to resume
+herhalen,to repeat
+oefenen,to practice
+trainen,to train
+ontwikkelen,to develop
+verbeteren,to improve
+repareren,to repair
+herstellen,to restore
+schoonmaken,to clean
+wassen,to wash
+drogen,to dry
+strijken,to iron
+vouwen,to fold
+opruimen,to tidy up
+sorteren,to sort
+rangschikken,to arrange
+indelen,to classify
+groeperen,to group
+verzamelen,to collect
+sparen,to save
+bewaren,to keep
+opslaan,to store
+wegleggen,to put away
+plaatsen,to place
+zetten,to put
+leggen,to lay
+hangen,to hang
+bevestigen,to attach
+vastmaken,to fasten
+binden,to tie
+knopen,to knot
+loslaten,to let go
+loskoppelen,to disconnect
+aansluiten,to connect
+verbinden,to connect
+koppelen,to link
+linken,to link
+communiceren,to communicate
+praten,to talk
+spreken,to speak
+zeggen,to say
+vertellen,to tell
+meedelen,to inform
+berichten,to message
+bellen,to call
+opbellen,to call
+terugbellen,to call back
+ophangen,to hang up
+luisteren,to listen
+horen,to hear
+verstaan,to understand
+fluisteren,to whisper
+schreeuwen,to shout
+roepen,to call
+zingen,to sing
+neuriën,to hum
+lachen,to laugh
+glimlachen,to smile
+grijnzen,to grin
+huilen,to cry
+snikken,to sob
+jammeren,to wail
+klagen,to complain
+zeuren,to nag
+mopperen,to grumble
+protesteren,to protest
+bezwaar maken,to object
+kritiek hebben,to criticize
+prijzen,to praise
+complimenteren,to compliment
+bedanken,to thank
+verontschuldigen,to apologize
+excuses maken,to apologize
+sorry zeggen,to say sorry
+spijt hebben,to regret
+berouw hebben,to repent
+vergeven,to forgive
+straffen,to punish
+belonen,to reward
+feliciteren,to congratulate
+wensen,to wish
+groeten,to greet
+welkom heten,to welcome
+afscheid nemen,to say goodbye
+dag zeggen,to say goodbye
+vaarwel zeggen,to say farewell
+tot ziens zeggen,to say see you later
+doei zeggen,to say bye
+hoi zeggen,to say hi
+hallo zeggen,to say hello
+goedemorgen zeggen,to say good morning
+goedemiddag zeggen,to say good afternoon
+goedenavond zeggen,to say good evening
+goedenacht zeggen,to say good night
+welterusten zeggen,to say sleep well
+droom zacht,sweet dreams
+slaap lekker,sleep well
+rust uit,rest well
+zorg goed voor jezelf,take care of yourself
+pas goed op jezelf,take care of yourself
+hou je taai,hang in there
+veel succes,good luck
+succes ermee,good luck with it
+het beste,all the best
+veel plezier,have fun
+geniet ervan,enjoy it
+fijn weekend,nice weekend
+prettige vakantie,nice vacation
+goede reis,safe trip
+behouden thuiskomst,safe return home
+van harte gefeliciteerd,heartfelt congratulations
+gefeliciteerd,congratulations
+proficiat,congratulations
+hoera,hurray
+fantastisch,fantastic
+geweldig,great
+super,super
+top,top
+prima,fine
+goed zo,well done
+uitstekend,excellent
+perfect,perfect
+prachtig,beautiful
+mooi,beautiful
+lief,sweet
+schattig,cute
+leuk,nice
+fijn,fine
+prettig,pleasant
+aangenaam,pleasant
+gezellig,cozy
+ontspannen,relaxed
+rustig,calm
+vredig,peaceful
+stil,quiet
+druk,busy
+hectisch,hectic
+chaotisch,chaotic
+wild,wild
+gek,crazy
+mal,silly
+grappig,funny
+lollig,funny
+komisch,comical
+hilarisch,hilarious
+belachelijk,ridiculous
+absurd,absurd
+raar,weird
+vreemd,strange
+eigenaardig,peculiar
+ongewoon,unusual
+bijzonder,special
+uniek,unique
+zeldzaam,rare
+kostbaar,precious
+waardevol,valuable
+dierbaar,dear
+belangrijk,important
+essentieel,essential
+noodzakelijk,necessary
+verplicht,mandatory
+optioneel,optional
+vrijwillig,voluntary
+automatisch,automatic
+handmatig,manual
+persoonlijk,personal
+privé,private
+openbaar,public
+algemeen,general
+specifiek,specific
+precies,precise
+exact,exact
+ongeveer,approximately
+min of meer,more or less
+zo'n beetje,kind of
+een beetje,a bit
+iets,something
+niets,nothing
+alles,everything
+veel,much
+weinig,little
+genoeg,enough
+te veel,too much
+te weinig,too little
+meer,more
+minder,less
+het meest,most
+het minst,least
+overal,everywhere
+ergens,somewhere
+nergens,nowhere
+hier,here
+daar,there
+ginds,over there
+links,left
+rechts,right
+rechtdoor,straight ahead
+terug,back
+vooruit,forward
+omhoog,up
+omlaag,down
+binnen,inside
+buiten,outside
+thuis,home
+weg,away
+dichtbij,nearby
+ver,far
+vlakbij,close by
+in de buurt,nearby
+verderop,further away
+hiernaast,next to this
+daarnaast,next to that
+tegenover,opposite
+achter,behind
+voor,in front of
+tussen,between
+onder,under
+boven,above
+naast,next to
+langs,along
+door,through
+rond,around
+rondom,around
+om,around
+over,over
+via,via
+per,per
+volgens,according to
+ondanks,despite
+behalve,except
+inclusief,including
+exclusief,excluding
+plus,plus
+minus,minus
+keer,times
+gedeeld door,divided by
+procent,percent
+ongeveer,about
+circa,approximately
+rond,around
+tegen,against
+vanaf,from
+tot,until
+sinds,since
+gedurende,during
+tijdens,during
+na,after
+voor,before
+eerder,earlier
+later,later
+vroeg,early
+laat,late
+op tijd,on time
+te laat,too late
+te vroeg,too early
+precies op tijd,exactly on time
+bijna,almost
+net,just
+pas,just
+nog,still
+al,already
+niet meer,no longer
+nog niet,not yet
+nog steeds,still
+altijd,always
+nooit,never
+soms,sometimes
+vaak,often
+zelden,rarely
+regelmatig,regularly
+gewoonlijk,usually
+normaal,normally
+meestal,mostly
+af en toe,occasionally
+nu en dan,now and then
+elke dag,every day
+iedere dag,every day
+dagelijks,daily
+wekelijks,weekly
+maandelijks,monthly
+jaarlijks,yearly
+eenmalig,one-time
+voortdurend,constantly
+continu,continuously
+permanent,permanently
+tijdelijk,temporarily
+definitief,definitively
+voorgoed,forever
+voor altijd,forever
+eeuwig,eternal
+oneindig,infinite
+beperkt,limited
+onbeperkt,unlimited
+volledig,complete
+gedeeltelijk,partially
+half,half
+kwart,quarter
+derde,third
+helft,half
+stuk,piece
+deel,part
+geheel,whole
+totaal,total
+som,sum
+bedrag,amount
+aantal,number
+hoeveelheid,quantity
+maat,size
+afmeting,dimension
+lengte,length
+breedte,width
+hoogte,height
+diepte,depth
+dikte,thickness
+gewicht,weight
+massa,mass
+volume,volume
+inhoud,content
+capaciteit,capacity
+snelheid,speed
+tempo,pace
+ritme,rhythm
+frequentie,frequency
+herkomst,origin
+bestemming,destination
+doel,goal
+reden,reason
+oorzaak,cause
+gevolg,consequence
+effect,effect
+invloed,influence
+impact,impact
+resultaat,result
+uitkomst,outcome
+conclusie,conclusion
+eind,end
+slot,end
+afsluiting,closure
+opening,opening
+begin,beginning
+start,start
+aanvang,beginning
+inleiding,introduction
+voorwoord,preface
+hoofdstuk,chapter
+paragraaf,paragraph
+zin,sentence
+woord,word
+letter,letter
+cijfer,digit
+teken,sign
+symbool,symbol
+punt,point
+komma,comma
+vraagteken,question mark
+uitroepteken,exclamation mark
+dubbele punt,colon
+puntkomma,semicolon
+apostrof,apostrophe
+aanhalingsteken,quotation mark
+streepje,dash
+koppelteken,hyphen
+accent,accent
+hoofdletter,capital letter
+kleine letter,lowercase letter
+spelling,spelling
+grammatica,grammar
+taal,language
+dialect,dialect
+accent,accent
+uitspraak,pronunciation
+betekenis,meaning
+definitie,definition
+vertaling,translation
+woordenboek,dictionary
+encyclopedie,encyclopedia
+atlas,atlas
+kaart,map
+diagram,diagram
+grafiek,graph
+tabel,table
+lijst,list
+overzicht,overview
+samenvatting,summary
+verslag,report
+rapport,report
+document,document
+bestand,file
+tekst,text
+artikel,article
+essay,essay
+verhaal,story
+roman,novel
+gedicht,poem
+lied,song
+script,script
+scenario,scenario
+toneelstuk,play
+film,movie
+documentaire,documentary
+serie,series
+aflevering,episode
+seizoen,season
+knal,episode
