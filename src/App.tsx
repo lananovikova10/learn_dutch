@@ -24,6 +24,8 @@ function App() {
     isLoading: true,
     error: null
   });
+  
+  const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
 
   const [userProgress, setUserProgress] = useState<UserProgress>(loadProgress());
   const [wordManager, setWordManager] = useState<WordManager | null>(null);
@@ -86,12 +88,17 @@ function App() {
     const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak);
     setUserProgress(newProgress);
 
-    // Set feedback
+    // Set feedback and store correct answer if wrong
     setGameState(prev => ({
       ...prev,
       feedback: isCorrect ? 'correct' : 'incorrect',
       sessionStats: newSessionStats
     }));
+    
+    // Store correct answer for display if the answer was wrong
+    if (!isCorrect) {
+      setCorrectAnswer(correctAnswer);
+    }
 
     // Move to next word after feedback delay
     setTimeout(() => {
@@ -101,6 +108,8 @@ function App() {
         currentWord: nextWord,
         feedback: null
       }));
+      // Clear correct answer when moving to next word
+      setCorrectAnswer(null);
     }, 1500);
   }, [gameState.currentWord, gameState.mode, gameState.sessionStats, wordManager, userProgress, updateSessionStats]);
 
@@ -221,6 +230,7 @@ function App() {
                   word={gameState.currentWord}
                   mode={gameState.mode}
                   feedback={gameState.feedback}
+                  correctAnswer={correctAnswer || undefined}
                 />
 
                 <div className="flex justify-center">

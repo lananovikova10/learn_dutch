@@ -14,9 +14,6 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
 
   return (
     <div className="flex flex-col items-center space-y-3">
-      <div className="text-secondary text-sm font-medium">
-        Learning Mode
-      </div>
 
       <div className="card-bg rounded-xl p-2 flex space-x-2">
         {modes.map((modeOption) => (

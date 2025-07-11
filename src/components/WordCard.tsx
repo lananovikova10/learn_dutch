@@ -6,9 +6,10 @@ interface WordCardProps {
   mode: LearningMode;
   feedback: FeedbackType;
   isLoading?: boolean;
+  correctAnswer?: string;
 }
 
-const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = false }) => {
+const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = false, correctAnswer }) => {
   const textRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('text-4xl md:text-5xl');
@@ -52,11 +53,13 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = f
 
   useEffect(() => {
     if (word) {
-      const displayWord = mode === 'nl-en' ? word.dutch : word.english;
+      const currentDisplayWord = feedback === 'incorrect' && correctAnswer 
+        ? correctAnswer 
+        : mode === 'nl-en' ? word.dutch : word.english;
       // Small delay to ensure DOM is ready
-      setTimeout(() => adjustFontSize(displayWord), 10);
+      setTimeout(() => adjustFontSize(currentDisplayWord), 10);
     }
-  }, [word, mode]);
+  }, [word, mode, feedback, correctAnswer]);
 
   // ... existing code ...
 
@@ -64,9 +67,18 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = f
     // ... existing code ...
   }
 
-  const displayWord = mode === 'nl-en' ? word.dutch : word.english;
+  // Show correct answer when feedback is incorrect, otherwise show the original word
+  const displayWord = feedback === 'incorrect' && correctAnswer 
+    ? correctAnswer 
+    : mode === 'nl-en' ? word.dutch : word.english;
+  
   const sourceLanguage = mode === 'nl-en' ? 'Dutch' : 'English';
   const targetLanguage = mode === 'nl-en' ? 'English' : 'Dutch';
+  
+  // Show different label when displaying correct answer
+  const cardLabel = feedback === 'incorrect' && correctAnswer
+    ? `Correct Answer: ${targetLanguage}`
+    : `${sourceLanguage} → ${targetLanguage}`;
 
   const getFeedbackClasses = (): string => {
       switch (feedback) {
@@ -86,7 +98,7 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, isLoading = f
     >
       <div className="mb-2">
         <span className="text-secondary-light text-sm font-medium uppercase tracking-wide">
-          {sourceLanguage} → {targetLanguage}
+          {cardLabel}
         </span>
       </div>
 
