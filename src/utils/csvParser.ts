@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { WordPair } from '../types';
+import type { WordPair, VerbPair } from '../types';
 
 export const loadCSVData = async (csvPath: string): Promise<WordPair[]> => {
   try {
@@ -29,6 +29,47 @@ export const loadCSVData = async (csvPath: string): Promise<WordPair[]> => {
     return wordPairs;
   } catch (error) {
     console.error('Error loading CSV data:', error);
+    throw error;
+  }
+};
+
+export const loadVerbData = async (csvPath: string): Promise<VerbPair[]> => {
+  try {
+    const response = await fetch(csvPath);
+    const csvText = await response.text();
+    
+    const parsed = Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (header) => header.toLowerCase().trim()
+    });
+
+    if (parsed.errors.length > 0) {
+      console.error('CSV parsing errors:', parsed.errors);
+      throw new Error('Failed to parse CSV data');
+    }
+
+    const verbPairs: VerbPair[] = parsed.data.map((row: any) => ({
+      english_infinitive: row.english_infinitive?.trim() || '',
+      dutch_infinitive: row.dutch_infinitive?.trim() || '',
+      imperfectum_single: row.imperfectum_single?.trim() || '',
+      imperfectum_plural: row.imperfectum_plural?.trim() || '',
+      perfectum: row.perfectum?.trim() || ''
+    })).filter(pair => 
+      pair.english_infinitive && 
+      pair.dutch_infinitive && 
+      pair.imperfectum_single && 
+      pair.imperfectum_plural && 
+      pair.perfectum
+    );
+
+    if (verbPairs.length === 0) {
+      throw new Error('No valid verb pairs found in CSV');
+    }
+
+    return verbPairs;
+  } catch (error) {
+    console.error('Error loading verb CSV data:', error);
     throw error;
   }
 };

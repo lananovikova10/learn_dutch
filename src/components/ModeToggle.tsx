@@ -13,9 +13,8 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
   ];
 
   return (
-    <div className="flex flex-col items-center space-y-3">
-
-      <div className="card-bg rounded-xl p-2 flex space-x-2">
+    <div className="flex flex-col space-y-3">
+      <div className="card-bg rounded-xl p-2 flex space-x-2 w-full">
         {modes.map((modeOption) => (
           <button
             key={modeOption.value}
@@ -23,7 +22,7 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
             disabled={disabled}
             className={`
               px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300
-              border-2
+              border-2 flex-1
               ${mode === modeOption.value
                 ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-xl border-blue-400 transform scale-105'
                 : 'text-primary btn-primary border-transparent hover:border-white hover:border-opacity-30'
@@ -40,13 +39,6 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
             </div>
           </button>
         ))}
-      </div>
-
-      <div className="text-muted text-xs text-center max-w-xs">
-        {mode === 'nl-en'
-          ? 'You\'ll see Dutch words and type English translations'
-          : 'You\'ll see English words and type Dutch translations'
-        }
       </div>
     </div>
   );

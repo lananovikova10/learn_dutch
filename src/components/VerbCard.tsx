@@ -1,14 +1,21 @@
-import type { WordPair, LearningMode, FeedbackType } from '../types';
+import type { VerbPair, VerbForm, FeedbackType } from '../types';
 import { useRef, useEffect, useState } from 'react';
 
-interface WordCardProps {
-  word: WordPair | null;
-  mode: LearningMode;
+interface VerbCardProps {
+  verb: VerbPair | null;
+  verbForm: VerbForm | null;
+  verbFormLabel: string;
   feedback: FeedbackType;
   correctAnswer?: string;
 }
 
-const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer }) => {
+const VerbCard: React.FC<VerbCardProps> = ({
+  verb,
+  verbForm,
+  verbFormLabel,
+  feedback,
+  correctAnswer
+}) => {
   const textRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('text-4xl md:text-5xl');
@@ -19,10 +26,8 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
     const container = containerRef.current;
     const textElement = textRef.current;
 
-    // Available width (container minus padding)
-    const availableWidth = container.clientWidth - 64; // 32px padding on each side (p-8)
+    const availableWidth = container.clientWidth - 64;
 
-    // Font size options from largest to smallest
     const fontSizes = [
       { class: 'text-4xl md:text-5xl', size: 48 },
       { class: 'text-3xl md:text-4xl', size: 36 },
@@ -33,11 +38,8 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
       { class: 'text-sm md:text-base', size: 14 }
     ];
 
-    // Test each font size until text fits
     for (const fontOption of fontSizes) {
       textElement.className = `${fontOption.class} font-bold text-primary-light mb-2`;
-
-      // Force reflow to get accurate measurements
       textElement.offsetHeight;
 
       if (textElement.scrollWidth <= availableWidth) {
@@ -46,46 +48,45 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
       }
     }
 
-    // If even the smallest size doesn't fit, use the smallest anyway
     setFontSize('text-sm md:text-base');
   };
 
   useEffect(() => {
-    if (word) {
-      // Small delay to ensure DOM is ready
+    if (verb) {
       setTimeout(() => adjustFontSize(), 10);
     }
-  }, [word, mode, feedback, correctAnswer]);
+  }, [verb, verbForm, feedback, correctAnswer]);
 
-  // ... existing code ...
-
-  if (!word) {
-    // ... existing code ...
+  if (!verb || !verbForm) {
+    return (
+      <div className="card-bg rounded-xl p-8 text-center border-2 border-white border-opacity-20">
+        <div className="animate-pulse">
+          <div className="h-4 bg-white bg-opacity-20 rounded mb-4"></div>
+          <div className="h-16 bg-white bg-opacity-20 rounded mb-4"></div>
+          <div className="h-4 bg-white bg-opacity-20 rounded"></div>
+        </div>
+      </div>
+    );
   }
 
-  // Show correct answer when feedback is incorrect, otherwise show the original word
-  const displayWord = feedback === 'incorrect' && correctAnswer 
-    ? correctAnswer 
-    : mode === 'nl-en' ? word?.dutch : word?.english;
-  
-  const sourceLanguage = mode === 'nl-en' ? 'Dutch' : 'English';
-  const targetLanguage = mode === 'nl-en' ? 'English' : 'Dutch';
-  
-  // Show different label when displaying correct answer
+  const displayWord = feedback === 'incorrect' && correctAnswer
+    ? correctAnswer
+    : verb.english_infinitive;
+
   const cardLabel = feedback === 'incorrect' && correctAnswer
-    ? `Correct Answer: ${targetLanguage}`
-    : `${sourceLanguage} → ${targetLanguage}`;
+    ? `Correct Answer: ${verbFormLabel}`
+    : `English → ${verbFormLabel}`;
 
   const getFeedbackClasses = (): string => {
-      switch (feedback) {
-        case 'correct':
-          return 'feedback-correct border-green-300 card-bg';
-        case 'incorrect':
-          return 'feedback-incorrect border-red-300 card-bg';
-        default:
-          return 'card-bg border-white border-opacity-20';
-      }
-    };
+    switch (feedback) {
+      case 'correct':
+        return 'feedback-correct border-green-300 card-bg';
+      case 'incorrect':
+        return 'feedback-incorrect border-red-300 card-bg';
+      default:
+        return 'card-bg border-white border-opacity-20';
+    }
+  };
 
   return (
     <div
@@ -107,11 +108,11 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
         </h2>
       </div>
 
-      <div className="text-secondary-light text-sm">
-        Translate to {targetLanguage}
-      </div>
+      {/*<div className="text-secondary-light text-sm">*/}
+      {/*  Provide the {verbFormLabel.toLowerCase()} form*/}
+      {/*</div>*/}
     </div>
   );
 };
 
-export default WordCard;
+export default VerbCard;

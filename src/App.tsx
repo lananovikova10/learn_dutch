@@ -1,15 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { LearningMode, GameState, UserProgress, SessionStats } from './types';
-import { loadCSVData } from './utils/csvParser';
+import type { LearningMode, GameState, UserProgress, SessionStats, ContentType } from './types';
+import { loadCSVData, loadVerbData } from './utils/csvParser';
 import { fuzzyMatch } from './utils/fuzzyMatch';
 import { WordManager } from './utils/wordManager';
+import { VerbManager } from './utils/verbManager';
 import { loadProgress, updateProgress, resetProgress } from './utils/storage';
 import { useTheme } from './contexts/ThemeContext';
 
 // Components
 import WordCard from './components/WordCard';
+import VerbCard from './components/VerbCard';
 import InputField from './components/InputField';
 import ModeToggle from './components/ModeToggle';
+import ContentTypeSwitcher from './components/ContentTypeSwitcher';
 import ProgressIndicator from './components/ProgressIndicator';
 import StatsDashboard from './components/StatsDashboard';
 import ThemeChooser from './components/ThemeChooser';
@@ -18,7 +21,10 @@ function App() {
   const { theme, setTheme } = useTheme();
   const [gameState, setGameState] = useState<GameState>({
     currentWord: null,
+    currentVerb: null,
     mode: 'nl-en',
+    contentType: 'words',
+    currentVerbForm: null,
     feedback: null,
     sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0 },
     isLoading: true,
@@ -29,6 +35,7 @@ function App() {
 
   const [userProgress, setUserProgress] = useState<UserProgress>(loadProgress());
   const [wordManager, setWordManager] = useState<WordManager | null>(null);
+  const [verbManager, setVerbManager] = useState<VerbManager | null>(null);
   const [showStats, setShowStats] = useState(false);
 
   // Initialize the app and load CSV data
@@ -37,14 +44,22 @@ function App() {
       try {
         setGameState(prev => ({ ...prev, isLoading: true, error: null }));
 
-        // Load CSV data from the public folder
-        const words = await loadCSVData('/data/dutch_common_words.csv');
+        // Load both words and verbs data
+        const [words, verbs] = await Promise.all([
+          loadCSVData('/data/dutch_common_words.csv'),
+          loadVerbData('/data/dutch_irregular_verbs.csv')
+        ]);
+
         console.log('Loaded words:', words.length);
+        console.log('Loaded verbs:', verbs.length);
 
-        const manager = new WordManager(words);
-        setWordManager(manager);
+        const wordMgr = new WordManager(words);
+        const verbMgr = new VerbManager(verbs);
 
-        const firstWord = manager.getCurrentWord();
+        setWordManager(wordMgr);
+        setVerbManager(verbMgr);
+
+        const firstWord = wordMgr.getCurrentWord();
         setGameState(prev => ({
           ...prev,
           currentWord: firstWord,
@@ -71,47 +86,92 @@ function App() {
 
   // Handle answer submission
   const handleAnswerSubmit = useCallback((userAnswer: string) => {
-    if (!gameState.currentWord || !wordManager) return;
+    if (gameState.contentType === 'words') {
+      if (!gameState.currentWord || !wordManager) return;
 
-    const correctAnswer = wordManager.getCorrectAnswer(gameState.currentWord, gameState.mode);
-    const isCorrect = fuzzyMatch(userAnswer, correctAnswer);
+      const correctAnswer = wordManager.getCorrectAnswer(gameState.currentWord, gameState.mode);
+      const isCorrect = fuzzyMatch(userAnswer, correctAnswer);
 
-    // Update session stats
-    const newSessionStats = updateSessionStats({
-      correct: gameState.sessionStats.correct + (isCorrect ? 1 : 0),
-      total: gameState.sessionStats.total + 1,
-      streak: isCorrect ? gameState.sessionStats.streak + 1 : 0,
-      accuracy: 0 // Will be calculated in updateSessionStats
-    });
+      // Update session stats
+      const newSessionStats = updateSessionStats({
+        correct: gameState.sessionStats.correct + (isCorrect ? 1 : 0),
+        total: gameState.sessionStats.total + 1,
+        streak: isCorrect ? gameState.sessionStats.streak + 1 : 0,
+        accuracy: 0 // Will be calculated in updateSessionStats
+      });
 
-    // Update user progress
-    const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak);
-    setUserProgress(newProgress);
+      // Update user progress
+      const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak);
+      setUserProgress(newProgress);
 
-    // Set feedback and store correct answer if wrong
-    setGameState(prev => ({
-      ...prev,
-      feedback: isCorrect ? 'correct' : 'incorrect',
-      sessionStats: newSessionStats
-    }));
-    
-    // Store correct answer for display if the answer was wrong
-    if (!isCorrect) {
-      setCorrectAnswer(correctAnswer);
-    }
-
-    // Move to next word after feedback delay
-    setTimeout(() => {
-      const nextWord = wordManager.getNextWord();
+      // Set feedback and store correct answer if wrong
       setGameState(prev => ({
         ...prev,
-        currentWord: nextWord,
-        feedback: null
+        feedback: isCorrect ? 'correct' : 'incorrect',
+        sessionStats: newSessionStats
       }));
-      // Clear correct answer when moving to next word
-      setCorrectAnswer(null);
-    }, 1500);
-  }, [gameState.currentWord, gameState.mode, gameState.sessionStats, wordManager, userProgress, updateSessionStats]);
+
+      // Store correct answer for display if the answer was wrong
+      if (!isCorrect) {
+        setCorrectAnswer(correctAnswer);
+      }
+
+      // Move to next word after feedback delay
+      setTimeout(() => {
+        const nextWord = wordManager.getNextWord();
+        setGameState(prev => ({
+          ...prev,
+          currentWord: nextWord,
+          feedback: null
+        }));
+        // Clear correct answer when moving to next word
+        setCorrectAnswer(null);
+      }, 1500);
+    } else if (gameState.contentType === 'verbs') {
+      if (!gameState.currentVerb || !verbManager || !gameState.currentVerbForm) return;
+
+      const correctAnswer = verbManager.getCorrectAnswer(gameState.currentVerb, gameState.currentVerbForm);
+      const isCorrect = fuzzyMatch(userAnswer, correctAnswer);
+
+      // Update session stats
+      const newSessionStats = updateSessionStats({
+        correct: gameState.sessionStats.correct + (isCorrect ? 1 : 0),
+        total: gameState.sessionStats.total + 1,
+        streak: isCorrect ? gameState.sessionStats.streak + 1 : 0,
+        accuracy: 0
+      });
+
+      // Update user progress
+      const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak);
+      setUserProgress(newProgress);
+
+      // Set feedback and store correct answer if wrong
+      setGameState(prev => ({
+        ...prev,
+        feedback: isCorrect ? 'correct' : 'incorrect',
+        sessionStats: newSessionStats
+      }));
+
+      // Store correct answer for display if the answer was wrong
+      if (!isCorrect) {
+        setCorrectAnswer(correctAnswer);
+      }
+
+      // Move to next verb after feedback delay
+      setTimeout(() => {
+        const nextVerb = verbManager.getNextVerb();
+        const nextVerbForm = verbManager.getRandomVerbForm();
+        setGameState(prev => ({
+          ...prev,
+          currentVerb: nextVerb,
+          currentVerbForm: nextVerbForm,
+          feedback: null
+        }));
+        // Clear correct answer when moving to next verb
+        setCorrectAnswer(null);
+      }, 1500);
+    }
+  }, [gameState.currentWord, gameState.currentVerb, gameState.mode, gameState.contentType, gameState.currentVerbForm, gameState.sessionStats, wordManager, verbManager, userProgress, updateSessionStats]);
 
   // Handle mode change
   const handleModeChange = useCallback((newMode: LearningMode) => {
@@ -121,6 +181,34 @@ function App() {
       feedback: null
     }));
   }, []);
+
+  // Handle content type change
+  const handleContentTypeChange = useCallback((newContentType: ContentType) => {
+    if (newContentType === 'words') {
+      if (!wordManager) return;
+      const firstWord = wordManager.getCurrentWord();
+      setGameState(prev => ({
+        ...prev,
+        contentType: newContentType,
+        currentWord: firstWord,
+        currentVerb: null,
+        currentVerbForm: null,
+        feedback: null
+      }));
+    } else if (newContentType === 'verbs') {
+      if (!verbManager) return;
+      const firstVerb = verbManager.getCurrentVerb();
+      const firstVerbForm = verbManager.getRandomVerbForm();
+      setGameState(prev => ({
+        ...prev,
+        contentType: newContentType,
+        currentWord: null,
+        currentVerb: firstVerb,
+        currentVerbForm: firstVerbForm,
+        feedback: null
+      }));
+    }
+  }, [wordManager, verbManager]);
 
   // Handle progress reset
   const handleResetProgress = useCallback(() => {
@@ -132,19 +220,6 @@ function App() {
     }));
   }, []);
 
-  // Restart session
-  const handleRestartSession = useCallback(() => {
-    if (wordManager) {
-      wordManager.reset();
-      const firstWord = wordManager.getCurrentWord();
-      setGameState(prev => ({
-        ...prev,
-        currentWord: firstWord,
-        feedback: null,
-        sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0 }
-      }));
-    }
-  }, [wordManager]);
 
   if (gameState.isLoading) {
     return (
@@ -215,30 +290,50 @@ function App() {
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-6 items-start">
-              {/* Mode Toggle */}
-              <div className="flex justify-center md:justify-start">
-                <ModeToggle
-                  mode={gameState.mode}
-                  onModeChange={handleModeChange}
+              {/* Content Type Switcher and Mode Toggle */}
+              <div className="flex flex-col space-y-4">
+                <ContentTypeSwitcher
+                  contentType={gameState.contentType}
+                  onContentTypeChange={handleContentTypeChange}
                   disabled={gameState.feedback !== null}
                 />
+                {gameState.contentType === 'words' && (
+                  <ModeToggle
+                    mode={gameState.mode}
+                    onModeChange={handleModeChange}
+                    disabled={gameState.feedback !== null}
+                  />
+                )}
               </div>
 
               {/* Main Learning Area */}
               <div className="space-y-6">
-                <WordCard
-                  word={gameState.currentWord}
-                  mode={gameState.mode}
-                  feedback={gameState.feedback}
-                  correctAnswer={correctAnswer || undefined}
-                />
+                {gameState.contentType === 'words' ? (
+                  <WordCard
+                    word={gameState.currentWord}
+                    mode={gameState.mode}
+                    feedback={gameState.feedback}
+                    correctAnswer={correctAnswer || undefined}
+                  />
+                ) : (
+                  <VerbCard
+                    verb={gameState.currentVerb}
+                    verbForm={gameState.currentVerbForm}
+                    verbFormLabel={gameState.currentVerbForm && verbManager ? verbManager.getVerbFormLabel(gameState.currentVerbForm) : ''}
+                    feedback={gameState.feedback}
+                    correctAnswer={correctAnswer || undefined}
+                  />
+                )}
 
                 <div className="flex justify-center">
                   <InputField
                     onSubmit={handleAnswerSubmit}
                     feedback={gameState.feedback}
                     disabled={gameState.feedback !== null}
-                    placeholder={`Type ${gameState.mode === 'nl-en' ? 'English' : 'Dutch'} translation...`}
+                    placeholder={gameState.contentType === 'words'
+                      ? `Type ${gameState.mode === 'nl-en' ? 'English' : 'Dutch'} translation...`
+                      : `Type the ${gameState.currentVerbForm && verbManager ? verbManager.getVerbFormLabel(gameState.currentVerbForm).toLowerCase() : 'verb form'}...`
+                    }
                   />
                 </div>
               </div>

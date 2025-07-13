@@ -2,6 +2,7 @@ export type Theme = 'default' | 'duo' | 'oled';
 
 export interface ThemeColors {
   name: string;
+  emoji: string;
   background: string;
   cardBg: string;
   textPrimary: string;
@@ -19,6 +20,7 @@ export interface ThemeColors {
 export const themes: Record<Theme, ThemeColors> = {
   default: {
     name: 'Default',
+    emoji: '🌊',
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     cardBg: 'rgba(255, 255, 255, 0.1)',
     textPrimary: '#ffffff',
@@ -34,6 +36,7 @@ export const themes: Record<Theme, ThemeColors> = {
   },
   duo: {
     name: 'Duo',
+    emoji: '🦉',
     background: 'linear-gradient(135deg, #a8d5a8 0%, #c8e6c9 100%)',
     cardBg: 'rgba(255, 255, 255, 0.95)',
     textPrimary: '#2d3748',
@@ -49,6 +52,7 @@ export const themes: Record<Theme, ThemeColors> = {
   },
   oled: {
     name: 'Dark',
+    emoji: '🌙',
     // Dark grey background instead of pure black for comfort
     background: 'linear-gradient(135deg, #121212 0%, #181818 100%)',
     // Elevated surfaces use lighter greys for depth
