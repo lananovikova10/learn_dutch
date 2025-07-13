@@ -13,6 +13,8 @@ export interface VerbPair {
 
 export type VerbForm = 'dutch_infinitive' | 'imperfectum_single' | 'imperfectum_plural' | 'perfectum';
 
+export type VerbMode = 'random' | 'infinitive' | 'imperfectum' | 'perfectum';
+
 export interface UserProgress {
   correctAnswers: number;
   totalAnswers: number;
@@ -40,6 +42,7 @@ export interface GameState {
   currentVerb: VerbPair | null;
   mode: LearningMode;
   contentType: ContentType;
+  verbMode: VerbMode;
   currentVerbForm: VerbForm | null;
   feedback: FeedbackType;
   sessionStats: SessionStats;

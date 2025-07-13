@@ -1,4 +1,4 @@
-import type { VerbPair, VerbForm } from '../types';
+import type { VerbPair, VerbForm, VerbMode } from '../types';
 import { shuffleArray } from './csvParser';
 
 export class VerbManager {
@@ -62,6 +62,22 @@ export class VerbManager {
   getRandomVerbForm(): VerbForm {
     const forms: VerbForm[] = ['dutch_infinitive', 'imperfectum_single', 'imperfectum_plural', 'perfectum'];
     return forms[Math.floor(Math.random() * forms.length)];
+  }
+
+  getVerbFormByMode(mode: VerbMode): VerbForm {
+    switch (mode) {
+      case 'random':
+        return this.getRandomVerbForm();
+      case 'infinitive':
+        return 'dutch_infinitive';
+      case 'imperfectum':
+        // Randomly choose between single and plural imperfectum
+        return Math.random() < 0.5 ? 'imperfectum_single' : 'imperfectum_plural';
+      case 'perfectum':
+        return 'perfectum';
+      default:
+        return this.getRandomVerbForm();
+    }
   }
 
   getVerbToDisplay(verb: VerbPair): string {

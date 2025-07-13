@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { LearningMode, GameState, UserProgress, SessionStats, ContentType } from './types';
+import type { LearningMode, GameState, UserProgress, SessionStats, ContentType, VerbMode } from './types';
 import { loadCSVData, loadVerbData } from './utils/csvParser';
 import { fuzzyMatch } from './utils/fuzzyMatch';
 import { WordManager } from './utils/wordManager';
@@ -13,6 +13,7 @@ import VerbCard from './components/VerbCard';
 import InputField from './components/InputField';
 import ModeToggle from './components/ModeToggle';
 import ContentTypeSwitcher from './components/ContentTypeSwitcher';
+import VerbModeSelector from './components/VerbModeSelector';
 import ProgressIndicator from './components/ProgressIndicator';
 import StatsDashboard from './components/StatsDashboard';
 import ThemeChooser from './components/ThemeChooser';
@@ -24,6 +25,7 @@ function App() {
     currentVerb: null,
     mode: 'nl-en',
     contentType: 'words',
+    verbMode: 'random',
     currentVerbForm: null,
     feedback: null,
     sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0 },
@@ -160,7 +162,7 @@ function App() {
       // Move to next verb after feedback delay
       setTimeout(() => {
         const nextVerb = verbManager.getNextVerb();
-        const nextVerbForm = verbManager.getRandomVerbForm();
+        const nextVerbForm = verbManager.getVerbFormByMode(gameState.verbMode);
         setGameState(prev => ({
           ...prev,
           currentVerb: nextVerb,
@@ -171,7 +173,7 @@ function App() {
         setCorrectAnswer(null);
       }, 1500);
     }
-  }, [gameState.currentWord, gameState.currentVerb, gameState.mode, gameState.contentType, gameState.currentVerbForm, gameState.sessionStats, wordManager, verbManager, userProgress, updateSessionStats]);
+  }, [gameState.currentWord, gameState.currentVerb, gameState.mode, gameState.contentType, gameState.verbMode, gameState.currentVerbForm, gameState.sessionStats, wordManager, verbManager, userProgress, updateSessionStats]);
 
   // Handle mode change
   const handleModeChange = useCallback((newMode: LearningMode) => {
@@ -198,7 +200,7 @@ function App() {
     } else if (newContentType === 'verbs') {
       if (!verbManager) return;
       const firstVerb = verbManager.getCurrentVerb();
-      const firstVerbForm = verbManager.getRandomVerbForm();
+      const firstVerbForm = verbManager.getVerbFormByMode(gameState.verbMode);
       setGameState(prev => ({
         ...prev,
         contentType: newContentType,
@@ -208,7 +210,20 @@ function App() {
         feedback: null
       }));
     }
-  }, [wordManager, verbManager]);
+  }, [wordManager, verbManager, gameState.verbMode]);
+
+  // Handle verb mode change
+  const handleVerbModeChange = useCallback((newVerbMode: VerbMode) => {
+    if (!verbManager || gameState.contentType !== 'verbs') return;
+    
+    const newVerbForm = verbManager.getVerbFormByMode(newVerbMode);
+    setGameState(prev => ({
+      ...prev,
+      verbMode: newVerbMode,
+      currentVerbForm: newVerbForm,
+      feedback: null
+    }));
+  }, [verbManager, gameState.contentType]);
 
   // Handle progress reset
   const handleResetProgress = useCallback(() => {
@@ -301,6 +316,13 @@ function App() {
                   <ModeToggle
                     mode={gameState.mode}
                     onModeChange={handleModeChange}
+                    disabled={gameState.feedback !== null}
+                  />
+                )}
+                {gameState.contentType === 'verbs' && (
+                  <VerbModeSelector
+                    verbMode={gameState.verbMode}
+                    onVerbModeChange={handleVerbModeChange}
                     disabled={gameState.feedback !== null}
                   />
                 )}
