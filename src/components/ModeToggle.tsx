@@ -22,7 +22,7 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
             disabled={disabled}
             className={`
               px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300
-              border-2 w-24
+              border-2 flex-1
               ${mode === modeOption.value
                 ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-xl border-blue-400 transform scale-105'
                 : 'text-primary btn-primary border-transparent hover:border-white hover:border-opacity-30'
