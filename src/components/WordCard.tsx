@@ -107,9 +107,9 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
         </h2>
       </div>
 
-      <div className="text-secondary-light text-sm">
-        Translate to {targetLanguage}
-      </div>
+      {/*<div className="text-secondary-light text-sm">*/}
+      {/*  Translate to {targetLanguage}*/}
+      {/*</div>*/}
     </div>
   );
 };
