@@ -271,7 +271,7 @@ function App() {
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-primary flex items-center space-x-2">
-          <span>Dutch Learning</span>
+          <span>Learning Dutch</span>
         </h1>
         <div className="flex items-center space-x-4">
           <ThemeChooser
