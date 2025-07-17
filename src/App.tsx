@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { LearningMode, GameState, UserProgress, SessionStats, ContentType, VerbMode } from './types';
 import { loadCSVData, loadVerbData } from './utils/csvParser';
 import { fuzzyMatch } from './utils/fuzzyMatch';
@@ -6,11 +6,12 @@ import { WordManager } from './utils/wordManager';
 import { VerbManager } from './utils/verbManager';
 import { loadProgress, updateProgress, resetProgress } from './utils/storage';
 import { useTheme } from './contexts/ThemeContext';
+import type { HintLevel } from './utils/hintGenerator';
 
 // Components
 import WordCard from './components/WordCard';
 import VerbCard from './components/VerbCard';
-import InputField from './components/InputField';
+import InputField, { type InputFieldRef } from './components/InputField';
 import ModeToggle from './components/ModeToggle';
 import ContentTypeSwitcher from './components/ContentTypeSwitcher';
 import VerbModeSelector from './components/VerbModeSelector';
@@ -28,12 +29,14 @@ function App() {
     verbMode: 'random',
     currentVerbForm: null,
     feedback: null,
-    sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0 },
+    sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0, hintsUsed: 0, questionsWithHints: 0, averageHintsPerQuestion: 0 },
     isLoading: true,
     error: null
   });
   
   const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
+  const [currentHintText, setCurrentHintText] = useState<string>('');
+  const inputFieldRef = useRef<InputFieldRef>(null);
 
   const [userProgress, setUserProgress] = useState<UserProgress>(loadProgress());
   const [wordManager, setWordManager] = useState<WordManager | null>(null);
@@ -83,7 +86,8 @@ function App() {
   // Calculate session statistics
   const updateSessionStats = useCallback((stats: SessionStats): SessionStats => {
     const accuracy = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
-    return { ...stats, accuracy };
+    const averageHintsPerQuestion = stats.total > 0 ? stats.hintsUsed / stats.total : 0;
+    return { ...stats, accuracy, averageHintsPerQuestion };
   }, []);
 
   // Handle answer submission
@@ -94,16 +98,23 @@ function App() {
       const correctAnswer = wordManager.getCorrectAnswer(gameState.currentWord, gameState.mode);
       const isCorrect = fuzzyMatch(userAnswer, correctAnswer);
 
+      // Get hint statistics from manager
+      const hintStats = wordManager.getHintUsageStats();
+      const hintsUsedForCurrentWord = hintStats.hintsUsedForCurrentWord.length;
+
       // Update session stats
       const newSessionStats = updateSessionStats({
         correct: gameState.sessionStats.correct + (isCorrect ? 1 : 0),
         total: gameState.sessionStats.total + 1,
         streak: isCorrect ? gameState.sessionStats.streak + 1 : 0,
-        accuracy: 0 // Will be calculated in updateSessionStats
+        accuracy: 0, // Will be calculated in updateSessionStats
+        hintsUsed: gameState.sessionStats.hintsUsed + hintsUsedForCurrentWord,
+        questionsWithHints: gameState.sessionStats.questionsWithHints + (hintsUsedForCurrentWord > 0 ? 1 : 0),
+        averageHintsPerQuestion: 0 // Will be calculated in updateSessionStats
       });
 
       // Update user progress
-      const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak);
+      const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak, hintsUsedForCurrentWord);
       setUserProgress(newProgress);
 
       // Set feedback and store correct answer if wrong
@@ -120,14 +131,15 @@ function App() {
 
       // Move to next word after feedback delay
       setTimeout(() => {
-        const nextWord = wordManager.getNextWord();
+        const nextWord = wordManager.getNextWordWithHintReset();
         setGameState(prev => ({
           ...prev,
           currentWord: nextWord,
           feedback: null
         }));
-        // Clear correct answer when moving to next word
+        // Clear correct answer and hint text when moving to next word
         setCorrectAnswer(null);
+        setCurrentHintText('');
       }, 1500);
     } else if (gameState.contentType === 'verbs') {
       if (!gameState.currentVerb || !verbManager || !gameState.currentVerbForm) return;
@@ -135,16 +147,23 @@ function App() {
       const correctAnswer = verbManager.getCorrectAnswer(gameState.currentVerb, gameState.currentVerbForm);
       const isCorrect = fuzzyMatch(userAnswer, correctAnswer);
 
+      // Get hint statistics from manager
+      const hintStats = verbManager.getHintUsageStats();
+      const hintsUsedForCurrentVerb = hintStats.hintsUsedForCurrentVerb.length;
+
       // Update session stats
       const newSessionStats = updateSessionStats({
         correct: gameState.sessionStats.correct + (isCorrect ? 1 : 0),
         total: gameState.sessionStats.total + 1,
         streak: isCorrect ? gameState.sessionStats.streak + 1 : 0,
-        accuracy: 0
+        accuracy: 0, // Will be calculated in updateSessionStats
+        hintsUsed: gameState.sessionStats.hintsUsed + hintsUsedForCurrentVerb,
+        questionsWithHints: gameState.sessionStats.questionsWithHints + (hintsUsedForCurrentVerb > 0 ? 1 : 0),
+        averageHintsPerQuestion: 0 // Will be calculated in updateSessionStats
       });
 
       // Update user progress
-      const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak);
+      const newProgress = updateProgress(userProgress, isCorrect, newSessionStats.streak, hintsUsedForCurrentVerb);
       setUserProgress(newProgress);
 
       // Set feedback and store correct answer if wrong
@@ -161,7 +180,7 @@ function App() {
 
       // Move to next verb after feedback delay
       setTimeout(() => {
-        const nextVerb = verbManager.getNextVerb();
+        const nextVerb = verbManager.getNextVerbWithHintReset();
         const nextVerbForm = verbManager.getVerbFormByMode(gameState.verbMode);
         setGameState(prev => ({
           ...prev,
@@ -169,11 +188,56 @@ function App() {
           currentVerbForm: nextVerbForm,
           feedback: null
         }));
-        // Clear correct answer when moving to next verb
+        // Clear correct answer and hint text when moving to next verb
         setCorrectAnswer(null);
+        setCurrentHintText('');
       }, 1500);
     }
   }, [gameState.currentWord, gameState.currentVerb, gameState.mode, gameState.contentType, gameState.verbMode, gameState.currentVerbForm, gameState.sessionStats, wordManager, verbManager, userProgress, updateSessionStats]);
+
+  // Handle hint usage
+  const handleHintUsed = useCallback((hintLevel: HintLevel) => {
+    if (gameState.contentType === 'words') {
+      if (!gameState.currentWord || !wordManager) return;
+      
+      // Record hint usage for statistics
+      wordManager.recordHintUsage(hintLevel);
+      
+      // Get hint text for the current level and display it
+      const hintText = wordManager.getHintForCurrentLevel(gameState.currentWord, gameState.mode, hintLevel);
+      setCurrentHintText(hintText);
+    } else if (gameState.contentType === 'verbs') {
+      if (!gameState.currentVerb || !verbManager || !gameState.currentVerbForm) return;
+      
+      // Record hint usage for statistics
+      verbManager.recordHintUsage(hintLevel);
+      
+      // Get hint text for the current level and display it
+      const hintText = verbManager.getHintForCurrentLevel(gameState.currentVerb, gameState.currentVerbForm, hintLevel);
+      setCurrentHintText(hintText);
+    }
+  }, [gameState.currentWord, gameState.currentVerb, gameState.contentType, gameState.mode, gameState.currentVerbForm, wordManager, verbManager]);
+
+  // Handle show answer - triggers wrong answer flow by submitting current input
+  const handleShowAnswer = useCallback(() => {
+    // Get the current input value from the InputField
+    const currentInput = inputFieldRef.current?.getCurrentValue() || '';
+    
+    // Submit the current input (which might be empty or partial)
+    handleAnswerSubmit(currentInput);
+  }, [handleAnswerSubmit]);
+
+  // Get correct answer for the current question (for hints)
+  const getCurrentCorrectAnswer = useCallback((): string | null => {
+    if (gameState.contentType === 'words') {
+      if (!gameState.currentWord || !wordManager) return null;
+      return wordManager.getCorrectAnswer(gameState.currentWord, gameState.mode);
+    } else if (gameState.contentType === 'verbs') {
+      if (!gameState.currentVerb || !verbManager || !gameState.currentVerbForm) return null;
+      return verbManager.getCorrectAnswer(gameState.currentVerb, gameState.currentVerbForm);
+    }
+    return null;
+  }, [gameState.currentWord, gameState.currentVerb, gameState.contentType, gameState.mode, gameState.currentVerbForm, wordManager, verbManager]);
 
   // Handle mode change
   const handleModeChange = useCallback((newMode: LearningMode) => {
@@ -182,7 +246,17 @@ function App() {
       mode: newMode,
       feedback: null
     }));
-  }, []);
+    setCorrectAnswer(null);
+    setCurrentHintText('');
+    
+    // Reset hint state in managers
+    if (wordManager) {
+      wordManager.resetHintState();
+    }
+    if (verbManager) {
+      verbManager.resetHintState();
+    }
+  }, [wordManager, verbManager]);
 
   // Handle content type change
   const handleContentTypeChange = useCallback((newContentType: ContentType) => {
@@ -210,6 +284,18 @@ function App() {
         feedback: null
       }));
     }
+    
+    // Clear hint state when switching content types
+    setCorrectAnswer(null);
+    setCurrentHintText('');
+    
+    // Reset hint state in managers
+    if (wordManager) {
+      wordManager.resetHintState();
+    }
+    if (verbManager) {
+      verbManager.resetHintState();
+    }
   }, [wordManager, verbManager, gameState.verbMode]);
 
   // Handle verb mode change
@@ -231,7 +317,7 @@ function App() {
     setUserProgress(resetUserProgress);
     setGameState(prev => ({
       ...prev,
-      sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0 }
+      sessionStats: { correct: 0, total: 0, accuracy: 0, streak: 0, hintsUsed: 0, questionsWithHints: 0, averageHintsPerQuestion: 0 }
     }));
   }, []);
 
@@ -347,8 +433,9 @@ function App() {
                   />
                 )}
 
-                <div className="flex justify-center">
+                <div className="flex flex-col items-center space-y-4">
                   <InputField
+                    ref={inputFieldRef}
                     onSubmit={handleAnswerSubmit}
                     feedback={gameState.feedback}
                     disabled={gameState.feedback !== null}
@@ -356,6 +443,10 @@ function App() {
                       ? `Type ${gameState.mode === 'nl-en' ? 'English' : 'Dutch'} translation...`
                       : `Type the ${gameState.currentVerbForm && verbManager ? verbManager.getVerbFormLabel(gameState.currentVerbForm).toLowerCase() : 'verb form'}...`
                     }
+                    hintText={currentHintText}
+                    correctAnswer={getCurrentCorrectAnswer() || undefined}
+                    onHintUsed={handleHintUsed}
+                    onShowAnswer={handleShowAnswer}
                   />
                 </div>
               </div>

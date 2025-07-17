@@ -51,6 +51,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--progress-bar', themeColors.progressBar);
     root.style.setProperty('--correct-feedback', themeColors.correctFeedback);
     root.style.setProperty('--incorrect-feedback', themeColors.incorrectFeedback);
+    root.style.setProperty('--hint-bg', themeColors.hintBg);
+    root.style.setProperty('--hint-border', themeColors.hintBorder);
+    root.style.setProperty('--hint-text', themeColors.hintText);
   }, [themeColors]);
 
   return (

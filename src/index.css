@@ -14,6 +14,9 @@
     --progress-bar: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
     --correct-feedback: #10b981;
     --incorrect-feedback: #ef4444;
+    --hint-bg: rgba(255, 255, 255, 0.15);
+    --hint-border: rgba(255, 255, 255, 0.25);
+    --hint-text: #ffffff;
 }
 
 /* Custom utilities for your beautiful Dutch learning app */
@@ -130,5 +133,24 @@
         background: var(--card-bg);
         border-color: var(--incorrect-feedback) !important;
         box-shadow: 0 0 20px rgba(211, 49, 49, 0.3);
+    }
+
+    /* Hint button styling with theme variables */
+    .hint-btn {
+        background: var(--hint-bg);
+        border-color: var(--hint-border);
+        color: var(--hint-text);
+    }
+
+    .hint-btn:hover {
+        background: var(--button-hover);
+        border-color: var(--hint-border);
+        transform: scale(1.02);
+    }
+
+    .hint-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
     }
 }

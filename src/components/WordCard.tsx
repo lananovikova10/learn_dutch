@@ -38,7 +38,7 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
       textElement.className = `${fontOption.class} font-bold text-primary-light mb-2`;
 
       // Force reflow to get accurate measurements
-      textElement.offsetHeight;
+      void textElement.offsetHeight;
 
       if (textElement.scrollWidth <= availableWidth) {
         setFontSize(fontOption.class);
@@ -106,6 +106,7 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
           {displayWord}
         </h2>
       </div>
+
 
       {/*<div className="text-secondary-light text-sm">*/}
       {/*  Translate to {targetLanguage}*/}

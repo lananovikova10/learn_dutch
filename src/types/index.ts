@@ -22,6 +22,10 @@ export interface UserProgress {
   bestStreak: number;
   wordsLearned: number;
   lastSessionDate: string;
+  // Hint-related statistics
+  totalHintsUsed: number;
+  questionsWithHints: number;
+  hintsPerSession: number[];
 }
 
 export interface SessionStats {
@@ -29,6 +33,10 @@ export interface SessionStats {
   total: number;
   accuracy: number;
   streak: number;
+  // Hint-related statistics for current session
+  hintsUsed: number;
+  questionsWithHints: number;
+  averageHintsPerQuestion: number;
 }
 
 export type LearningMode = 'nl-en' | 'en-nl';

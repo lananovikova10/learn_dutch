@@ -1,5 +1,6 @@
 import type { WordPair, LearningMode } from '../types';
 import { shuffleArray } from './csvParser';
+import { generateHint, getInitialHintLevel, isValidHintLevel, type HintLevel } from './hintGenerator';
 
 export class WordManager {
   private words: WordPair[] = [];
@@ -7,6 +8,12 @@ export class WordManager {
   private shuffledWords: WordPair[] = [];
   private recentWords: WordPair[] = [];
   private readonly maxRecentWords = 5; // Prevent immediate repetition
+  
+  // Hint-related state
+  private currentHintLevel: HintLevel = getInitialHintLevel();
+  private hintsUsedForCurrentWord: HintLevel[] = [];
+  private totalHintsUsed = 0;
+  private questionsWithHints = 0;
 
   constructor(words: WordPair[]) {
     this.words = words;
@@ -81,5 +88,123 @@ export class WordManager {
   reset(): void {
     this.shuffleWords();
     this.recentWords = [];
+    this.resetHintState();
+  }
+
+  // Hint-related methods
+  getHintForLevel(answer: string, level: HintLevel): string {
+    try {
+      // Validate inputs
+      if (!answer || typeof answer !== 'string') {
+        console.warn('WordManager: Invalid answer provided for hint generation');
+        return '';
+      }
+      
+      if (!isValidHintLevel(level)) {
+        console.warn('WordManager: Invalid hint level provided:', level);
+        return '';
+      }
+      
+      return generateHint(answer, level);
+    } catch (error) {
+      console.error('WordManager: Error generating hint:', error);
+      return '';
+    }
+  }
+
+  getCurrentHintLevel(): HintLevel {
+    try {
+      return this.currentHintLevel;
+    } catch (error) {
+      console.error('WordManager: Error getting current hint level:', error);
+      return getInitialHintLevel();
+    }
+  }
+
+  getHintForCurrentLevel(word: WordPair, mode: LearningMode, level: HintLevel): string {
+    try {
+      // Validate inputs
+      if (!word || typeof word !== 'object') {
+        console.warn('WordManager: Invalid word provided for hint generation');
+        return '';
+      }
+      
+      if (!mode || (mode !== 'nl-en' && mode !== 'en-nl')) {
+        console.warn('WordManager: Invalid mode provided for hint generation');
+        return '';
+      }
+      
+      if (!isValidHintLevel(level)) {
+        console.warn('WordManager: Invalid hint level provided:', level);
+        return '';
+      }
+      
+      const correctAnswer = this.getCorrectAnswer(word, mode);
+      const hintText = this.getHintForLevel(correctAnswer, level);
+      return hintText;
+    } catch (error) {
+      console.error('WordManager: Error generating hint for current level:', error);
+      return '';
+    }
+  }
+
+  recordHintUsage(level: HintLevel): void {
+    try {
+      // Validate input
+      if (!isValidHintLevel(level)) {
+        console.warn('WordManager: Invalid hint level provided for recording:', level);
+        return;
+      }
+      
+      // Track if this is the first hint used for this word
+      if (this.hintsUsedForCurrentWord.length === 0) {
+        this.questionsWithHints++;
+      }
+      
+      // Add the hint level to the current word's hint usage
+      this.hintsUsedForCurrentWord.push(level);
+      this.totalHintsUsed++;
+      
+      // Don't advance hint level here - let the HintButton manage it
+    } catch (error) {
+      console.error('WordManager: Error recording hint usage:', error);
+    }
+  }
+
+  resetHintState(): void {
+    this.currentHintLevel = getInitialHintLevel();
+    this.hintsUsedForCurrentWord = [];
+  }
+
+  // Move to next word and reset hint state
+  getNextWordWithHintReset(): WordPair | null {
+    const nextWord = this.getNextWord();
+    this.resetHintState();
+    return nextWord;
+  }
+
+  // Statistics methods
+  getHintUsageStats(): {
+    totalHintsUsed: number;
+    questionsWithHints: number;
+    averageHintsPerQuestion: number;
+    hintsUsedForCurrentWord: HintLevel[];
+  } {
+    try {
+      return {
+        totalHintsUsed: this.totalHintsUsed || 0,
+        questionsWithHints: this.questionsWithHints || 0,
+        averageHintsPerQuestion: this.questionsWithHints > 0 ? this.totalHintsUsed / this.questionsWithHints : 0,
+        hintsUsedForCurrentWord: [...(this.hintsUsedForCurrentWord || [])]
+      };
+    } catch (error) {
+      console.error('WordManager: Error getting hint usage stats:', error);
+      return {
+        totalHintsUsed: 0,
+        questionsWithHints: 0,
+        averageHintsPerQuestion: 0,
+        hintsUsedForCurrentWord: []
+      };
+    }
   }
 }

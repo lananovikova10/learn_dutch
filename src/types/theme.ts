@@ -2,7 +2,6 @@ export type Theme = 'default' | 'duo' | 'oled';
 
 export interface ThemeColors {
   name: string;
-  emoji: string;
   background: string;
   cardBg: string;
   textPrimary: string;
@@ -15,12 +14,14 @@ export interface ThemeColors {
   progressBar: string;
   correctFeedback: string;
   incorrectFeedback: string;
+  hintBg: string;
+  hintBorder: string;
+  hintText: string;
 }
 
 export const themes: Record<Theme, ThemeColors> = {
   default: {
     name: 'Default',
-    emoji: '🌊',
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     cardBg: 'rgba(255, 255, 255, 0.1)',
     textPrimary: '#ffffff',
@@ -32,11 +33,13 @@ export const themes: Record<Theme, ThemeColors> = {
     buttonHover: 'rgba(255, 255, 255, 0.3)',
     progressBar: 'linear-gradient(90deg, #10b981 0%, #3b82f6 100%)',
     correctFeedback: '#10b981',
-    incorrectFeedback: '#ef4444'
+    incorrectFeedback: '#ef4444',
+    hintBg: 'rgba(255, 255, 255, 0.15)',
+    hintBorder: 'rgba(255, 255, 255, 0.25)',
+    hintText: '#ffffff'
   },
   duo: {
     name: 'Duo',
-    emoji: '🦉',
     background: 'linear-gradient(135deg, #a8d5a8 0%, #c8e6c9 100%)',
     cardBg: 'rgba(255, 255, 255, 0.95)',
     textPrimary: '#2d3748',
@@ -48,11 +51,13 @@ export const themes: Record<Theme, ThemeColors> = {
     buttonHover: '#66bb6a',
     progressBar: 'linear-gradient(90deg, #81c784 0%, #ffb74d 100%)',
     correctFeedback: '#66bb6a',
-    incorrectFeedback: '#e57373'
+    incorrectFeedback: '#e57373',
+    hintBg: '#a5d6a7',
+    hintBorder: '#81c784',
+    hintText: '#2d3748'
   },
   oled: {
     name: 'Dark',
-    emoji: '🌙',
     // Dark grey background instead of pure black for comfort
     background: 'linear-gradient(135deg, #121212 0%, #181818 100%)',
     // Elevated surfaces use lighter greys for depth
@@ -74,6 +79,10 @@ export const themes: Record<Theme, ThemeColors> = {
     progressBar: 'linear-gradient(90deg, #4ade80 0%, #60a5fa 100%)',
     // Muted feedback colors to prevent eye strain
     correctFeedback: '#4ade80',
-    incorrectFeedback: '#f87171'
+    incorrectFeedback: '#f87171',
+    // Hint colors for dark theme
+    hintBg: '#3a3a3a',
+    hintBorder: '#555555',
+    hintText: 'rgba(255, 255, 255, 0.9)'
   }
 };

@@ -1,5 +1,6 @@
 import type { VerbPair, VerbForm, VerbMode } from '../types';
 import { shuffleArray } from './csvParser';
+import { generateHint, getInitialHintLevel, isValidHintLevel, type HintLevel } from './hintGenerator';
 
 export class VerbManager {
   private verbs: VerbPair[] = [];
@@ -7,6 +8,12 @@ export class VerbManager {
   private shuffledVerbs: VerbPair[] = [];
   private recentVerbs: VerbPair[] = [];
   private readonly maxRecentVerbs = 5;
+  
+  // Hint-related state
+  private currentHintLevel: HintLevel = getInitialHintLevel();
+  private hintsUsedForCurrentVerb: HintLevel[] = [];
+  private totalHintsUsed = 0;
+  private questionsWithHints = 0;
 
   constructor(verbs: VerbPair[]) {
     this.verbs = verbs;
@@ -105,5 +112,137 @@ export class VerbManager {
   reset(): void {
     this.shuffleVerbs();
     this.recentVerbs = [];
+    this.resetHintState();
+  }
+
+  // Hint-related methods
+  getHintForLevel(answer: string, level: HintLevel): string {
+    try {
+      // Validate inputs
+      if (!answer || typeof answer !== 'string') {
+        console.warn('VerbManager: Invalid answer provided for hint generation');
+        return '';
+      }
+      
+      if (!isValidHintLevel(level)) {
+        console.warn('VerbManager: Invalid hint level provided:', level);
+        return '';
+      }
+      
+      return generateHint(answer, level);
+    } catch (error) {
+      console.error('VerbManager: Error generating hint:', error);
+      return '';
+    }
+  }
+
+  getCurrentHintLevel(): HintLevel {
+    try {
+      return this.currentHintLevel;
+    } catch (error) {
+      console.error('VerbManager: Error getting current hint level:', error);
+      return getInitialHintLevel();
+    }
+  }
+
+  getHintForCurrentLevel(verb: VerbPair, form: VerbForm, level: HintLevel): string {
+    try {
+      // Validate inputs
+      if (!verb || typeof verb !== 'object') {
+        console.warn('VerbManager: Invalid verb provided for hint generation');
+        return '';
+      }
+      
+      if (!form || !['dutch_infinitive', 'imperfectum_single', 'imperfectum_plural', 'perfectum'].includes(form)) {
+        console.warn('VerbManager: Invalid verb form provided for hint generation');
+        return '';
+      }
+      
+      if (!isValidHintLevel(level)) {
+        console.warn('VerbManager: Invalid hint level provided:', level);
+        return '';
+      }
+      
+      const correctAnswer = this.getCorrectAnswer(verb, form);
+      const hintText = this.getHintForLevel(correctAnswer, level);
+      return hintText;
+    } catch (error) {
+      console.error('VerbManager: Error generating hint for current level:', error);
+      return '';
+    }
+  }
+
+  recordHintUsage(level: HintLevel): void {
+    try {
+      // Validate input
+      if (!isValidHintLevel(level)) {
+        console.warn('VerbManager: Invalid hint level provided for recording:', level);
+        return;
+      }
+      
+      // Track if this is the first hint used for this verb
+      if (this.hintsUsedForCurrentVerb.length === 0) {
+        this.questionsWithHints++;
+      }
+      
+      // Add the hint level to the current verb's hint usage
+      this.hintsUsedForCurrentVerb.push(level);
+      this.totalHintsUsed++;
+      
+      // Don't advance hint level here - let the HintButton manage it
+    } catch (error) {
+      console.error('VerbManager: Error recording hint usage:', error);
+    }
+  }
+
+  resetHintState(): void {
+    try {
+      this.currentHintLevel = getInitialHintLevel();
+      this.hintsUsedForCurrentVerb = [];
+    } catch (error) {
+      console.error('VerbManager: Error resetting hint state:', error);
+      // Fallback to safe defaults
+      this.currentHintLevel = 1;
+      this.hintsUsedForCurrentVerb = [];
+    }
+  }
+
+  // Move to next verb and reset hint state
+  getNextVerbWithHintReset(): VerbPair | null {
+    try {
+      const nextVerb = this.getNextVerb();
+      this.resetHintState();
+      return nextVerb;
+    } catch (error) {
+      console.error('VerbManager: Error getting next verb with hint reset:', error);
+      // Still try to reset hint state even if getting next verb fails
+      this.resetHintState();
+      return null;
+    }
+  }
+
+  // Statistics methods
+  getHintUsageStats(): {
+    totalHintsUsed: number;
+    questionsWithHints: number;
+    averageHintsPerQuestion: number;
+    hintsUsedForCurrentVerb: HintLevel[];
+  } {
+    try {
+      return {
+        totalHintsUsed: this.totalHintsUsed || 0,
+        questionsWithHints: this.questionsWithHints || 0,
+        averageHintsPerQuestion: this.questionsWithHints > 0 ? this.totalHintsUsed / this.questionsWithHints : 0,
+        hintsUsedForCurrentVerb: [...(this.hintsUsedForCurrentVerb || [])]
+      };
+    } catch (error) {
+      console.error('VerbManager: Error getting hint usage stats:', error);
+      return {
+        totalHintsUsed: 0,
+        questionsWithHints: 0,
+        averageHintsPerQuestion: 0,
+        hintsUsedForCurrentVerb: []
+      };
+    }
   }
 }

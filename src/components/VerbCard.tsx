@@ -40,7 +40,7 @@ const VerbCard: React.FC<VerbCardProps> = ({
 
     for (const fontOption of fontSizes) {
       textElement.className = `${fontOption.class} font-bold text-primary-light mb-2`;
-      textElement.offsetHeight;
+      void textElement.offsetHeight;
 
       if (textElement.scrollWidth <= availableWidth) {
         setFontSize(fontOption.class);
@@ -107,6 +107,7 @@ const VerbCard: React.FC<VerbCardProps> = ({
           {displayWord}
         </h2>
       </div>
+
 
       {/*<div className="text-secondary-light text-sm">*/}
       {/*  Provide the {verbFormLabel.toLowerCase()} form*/}

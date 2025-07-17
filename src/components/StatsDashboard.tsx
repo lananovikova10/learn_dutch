@@ -1,5 +1,5 @@
 import type { UserProgress } from '../types';
-import { getAccuracy } from '../utils/storage';
+import { getAccuracy, getHintStats } from '../utils/storage';
 
 interface StatsDashboardProps {
   progress: UserProgress;
@@ -9,6 +9,7 @@ interface StatsDashboardProps {
 
 const StatsDashboard: React.FC<StatsDashboardProps> = ({ progress, onReset, className = '' }) => {
     const accuracy = getAccuracy(progress);
+    const hintStats = getHintStats(progress);
 
   const formatDate = (dateString: string): string => {
     try {
@@ -83,6 +84,61 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ progress, onReset, clas
           </div>
         </div>
       </div>
+
+      {/* Hint Statistics */}
+      {progress.totalAnswers > 0 && (
+        <div className="mb-6">
+          <h3 className="text-gray-800 font-semibold text-sm mb-3 flex items-center space-x-2">
+            <span>💡 Hint Usage</span>
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Total Hints Used */}
+            <div className="bg-white bg-opacity-10 rounded-lg p-3 text-center">
+              <div className="text-lg sm:text-xl font-bold text-gray-800 mb-1">
+                {progress.totalHintsUsed}
+              </div>
+              <div className="text-xs text-gray-600 uppercase tracking-wide">
+                Total Hints
+              </div>
+            </div>
+
+            {/* Average Hints Per Question */}
+            <div className="bg-white bg-opacity-10 rounded-lg p-3 text-center">
+              <div className="text-lg sm:text-xl font-bold text-blue-600 mb-1">
+                {hintStats.averageHintsPerQuestion}
+              </div>
+              <div className="text-xs text-gray-600 uppercase tracking-wide">
+                Avg Per Question
+              </div>
+            </div>
+
+            {/* Questions with Hints Percentage */}
+            <div className="bg-white bg-opacity-10 rounded-lg p-3 text-center">
+              <div className="text-lg sm:text-xl font-bold text-purple-600 mb-1">
+                {hintStats.hintUsagePercentage}%
+              </div>
+              <div className="text-xs text-gray-600 uppercase tracking-wide">
+                Questions with Hints
+              </div>
+            </div>
+          </div>
+          
+          {/* Hint Trend */}
+          {hintStats.recentHintTrend !== 0 && (
+            <div className="mt-3 bg-white bg-opacity-10 rounded-lg p-3 text-center">
+              <div className="text-xs text-gray-600 uppercase tracking-wide mb-1">
+                Recent Hint Trend
+              </div>
+              <div className={`text-sm font-medium ${hintStats.recentHintTrend > 0 ? 'text-orange-600' : 'text-green-600'}`}>
+                {hintStats.recentHintTrend > 0 ? '↗' : '↘'} {Math.abs(hintStats.recentHintTrend)}%
+                <span className="text-xs ml-1">
+                  {hintStats.recentHintTrend > 0 ? '(using more hints)' : '(using fewer hints)'}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Last Session */}
       <div className="bg-white bg-opacity-10 rounded-lg p-4">
