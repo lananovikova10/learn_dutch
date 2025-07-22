@@ -54,6 +54,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--hint-bg', themeColors.hintBg);
     root.style.setProperty('--hint-border', themeColors.hintBorder);
     root.style.setProperty('--hint-text', themeColors.hintText);
+    root.style.setProperty('--stat-box-bg', themeColors.statBoxBg);
+    root.style.setProperty('--stat-box-hover', themeColors.statBoxHover);
   }, [themeColors]);
 
   return (

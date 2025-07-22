@@ -17,6 +17,8 @@ export interface ThemeColors {
   hintBg: string;
   hintBorder: string;
   hintText: string;
+  statBoxBg: string;
+  statBoxHover: string;
 }
 
 export const themes: Record<Theme, ThemeColors> = {
@@ -36,7 +38,9 @@ export const themes: Record<Theme, ThemeColors> = {
     incorrectFeedback: '#ef4444',
     hintBg: 'rgba(255, 255, 255, 0.15)',
     hintBorder: 'rgba(255, 255, 255, 0.25)',
-    hintText: '#ffffff'
+    hintText: '#ffffff',
+    statBoxBg: 'rgba(255, 255, 255, 0.2)',
+    statBoxHover: 'rgba(255, 255, 255, 0.3)'
   },
   duo: {
     name: 'Duo',
@@ -54,7 +58,9 @@ export const themes: Record<Theme, ThemeColors> = {
     incorrectFeedback: '#e57373',
     hintBg: '#a5d6a7',
     hintBorder: '#81c784',
-    hintText: '#2d3748'
+    hintText: '#2d3748',
+    statBoxBg: 'rgba(129, 199, 132, 0.2)',
+    statBoxHover: 'rgba(129, 199, 132, 0.3)'
   },
   oled: {
     name: 'Dark',
@@ -83,6 +89,8 @@ export const themes: Record<Theme, ThemeColors> = {
     // Hint colors for dark theme
     hintBg: '#3a3a3a',
     hintBorder: '#555555',
-    hintText: 'rgba(255, 255, 255, 0.9)'
+    hintText: 'rgba(255, 255, 255, 0.9)',
+    statBoxBg: 'rgba(45, 55, 72, 0.4)',
+    statBoxHover: 'rgba(45, 55, 72, 0.6)'
   }
 };
