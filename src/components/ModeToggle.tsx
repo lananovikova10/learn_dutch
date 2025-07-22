@@ -13,7 +13,7 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
   ];
 
   return (
-    <div className="flex flex-col space-y-3">
+    <div className="flex flex-col space-y-4">
       <div className="card-bg rounded-xl p-2 flex space-x-2 w-full">
         {modes.map((modeOption) => (
           <button
@@ -31,7 +31,7 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onModeChange, disabled = 
             `}
             title={modeOption.description}
           >
-            <div className="flex flex-col items-center space-y-1">
+            <div className="flex flex-col items-center space-y-4">
               <span className="text-lg font-bold">{modeOption.label}</span>
               <span className={`text-xs font-semibold ${mode === modeOption.value ? 'text-blue-100' : 'opacity-70'}`}>
                 {modeOption.value === 'nl-en' ? 'NL → EN' : 'EN → NL'}

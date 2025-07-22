@@ -1,6 +1,7 @@
 export interface WordPair {
   dutch: string;
   english: string;
+  known?: boolean;
 }
 
 export interface VerbPair {

@@ -17,10 +17,23 @@ export const loadCSVData = async (csvPath: string): Promise<WordPair[]> => {
       throw new Error('Failed to parse CSV data');
     }
 
-    const wordPairs: WordPair[] = parsed.data.map((row: any) => ({
-      dutch: row.dutch?.trim() || '',
-      english: row.english?.trim() || ''
-    })).filter(pair => pair.dutch && pair.english);
+    const wordPairs: WordPair[] = parsed.data.map((row: any) => {
+      const knownValue = row.known?.toString().toLowerCase().trim();
+      const isKnown = knownValue === 'true' || knownValue === '1';
+      
+      return {
+        dutch: row.dutch?.trim() || '',
+        english: row.english?.trim() || '',
+        known: isKnown
+      };
+    }).filter(pair => pair.dutch && pair.english);
+
+    // Debug: Log first few words to check parsing
+    console.log('First 5 parsed words:', wordPairs.slice(0, 5).map(w => ({
+      dutch: w.dutch,
+      english: w.english, 
+      known: w.known
+    })));
 
     if (wordPairs.length === 0) {
       throw new Error('No valid word pairs found in CSV');

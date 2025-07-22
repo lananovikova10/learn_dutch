@@ -4,7 +4,7 @@ import { loadCSVData, loadVerbData } from './utils/csvParser';
 import { fuzzyMatch } from './utils/fuzzyMatch';
 import { WordManager } from './utils/wordManager';
 import { VerbManager } from './utils/verbManager';
-import { loadProgress, updateProgress, resetProgress } from './utils/storage';
+import { loadProgress, updateProgress, resetProgress, applyKnownStatusToWords, markWordAsKnown as persistMarkWordAsKnown } from './utils/storage';
 import { useTheme } from './contexts/ThemeContext';
 import type { HintLevel } from './utils/hintGenerator';
 
@@ -55,10 +55,18 @@ function App() {
           loadVerbData('/data/dutch_irregular_verbs.csv')
         ]);
 
-        console.log('Loaded words:', words.length);
-        console.log('Loaded verbs:', verbs.length);
+        // Apply known status to words from localStorage
+        const wordsWithKnownStatus = applyKnownStatusToWords(words);
 
-        const wordMgr = new WordManager(words);
+        console.log('Loaded words:', wordsWithKnownStatus.length);
+        console.log('Loaded verbs:', verbs.length);
+        console.log('Words after applying localStorage status:', wordsWithKnownStatus.slice(0, 5).map(w => ({
+          dutch: w.dutch,
+          english: w.english,
+          known: w.known
+        })));
+
+        const wordMgr = new WordManager(wordsWithKnownStatus);
         const verbMgr = new VerbManager(verbs);
 
         setWordManager(wordMgr);
@@ -321,13 +329,72 @@ function App() {
     }));
   }, []);
 
+  // Handle marking a word as known
+  const handleMarkAsKnown = useCallback((word: WordPair) => {
+    if (!wordManager) return;
+    
+    // Get the translation to show
+    const translation = wordManager.getCorrectAnswer(word, gameState.mode);
+    
+    // Persist the known status to localStorage
+    persistMarkWordAsKnown(word);
+    
+    // Mark the word as known in the manager
+    wordManager.markWordAsKnown(word);
+    
+    // Show correct feedback with translation (green effect)
+    const markedWord = { ...word, known: true };
+    setGameState(prev => ({
+      ...prev,
+      currentWord: markedWord,
+      feedback: 'correct' // Green success effect
+    }));
+    
+    // Show the translation
+    setCorrectAnswer(translation);
+    
+    // After feedback delay, move to the next word (same as correct answer timing)
+    setTimeout(() => {
+      const nextWord = wordManager.getCurrentWord();
+      setGameState(prev => ({
+        ...prev,
+        currentWord: nextWord,
+        feedback: null
+      }));
+      // Clear correct answer and hint text when moving to next word
+      setCorrectAnswer(null);
+      setCurrentHintText('');
+    }, 1500); // Match the timing of correct answer feedback
+  }, [wordManager, gameState.mode]);
+
+  // Handle unmarking a known word
+  const handleKnownWordUnmarked = useCallback(() => {
+    if (!wordManager) return;
+    
+    // Refresh the word manager with updated known status
+    // This will re-filter the available words
+    wordManager.reset();
+    
+    // If we're out of words to practice, get the current word
+    const currentWord = wordManager.getCurrentWord();
+    setGameState(prev => ({
+      ...prev,
+      currentWord: currentWord,
+      feedback: null
+    }));
+    
+    // Clear any feedback states
+    setCorrectAnswer(null);
+    setCurrentHintText('');
+  }, [wordManager]);
+
 
   if (gameState.isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin text-6xl mb-4">🔄</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Loading Dutch Words...</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Loading Dutch Words...</h2>
           <p className="text-white text-opacity-70">Getting ready for your learning session 📚</p>
         </div>
       </div>
@@ -339,7 +406,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-6xl mb-4">😞</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Oops!</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Oops!</h2>
           <p className="text-white text-opacity-70 mb-4">{gameState.error}</p>
           <button
             onClick={() => window.location.reload()}
@@ -381,6 +448,7 @@ function App() {
               <StatsDashboard
                 progress={userProgress}
                 onReset={handleResetProgress}
+                onKnownWordUnmarked={handleKnownWordUnmarked}
               />
               <button
                 onClick={() => setShowStats(false)}
@@ -390,7 +458,7 @@ function App() {
               </button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-3 gap-6 items-start">
+            <div className="grid md:grid-cols-3 gap-4 items-start">
               {/* Content Type Switcher and Mode Toggle */}
               <div className="flex flex-col space-y-4">
                 <ContentTypeSwitcher
@@ -415,13 +483,14 @@ function App() {
               </div>
 
               {/* Main Learning Area */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {gameState.contentType === 'words' ? (
                   <WordCard
                     word={gameState.currentWord}
                     mode={gameState.mode}
                     feedback={gameState.feedback}
                     correctAnswer={correctAnswer || undefined}
+                    onMarkAsKnown={handleMarkAsKnown}
                   />
                 ) : (
                   <VerbCard

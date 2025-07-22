@@ -17,7 +17,7 @@ const ContentTypeSwitcher: React.FC<ContentTypeSwitcherProps> = ({
   ];
 
   return (
-    <div className="flex flex-col space-y-3">
+    <div className="flex flex-col space-y-4">
       <div className="card-bg rounded-xl p-2 flex space-x-2 w-full">
         {options.map((option) => (
           <button
@@ -35,7 +35,7 @@ const ContentTypeSwitcher: React.FC<ContentTypeSwitcherProps> = ({
             `}
             title={option.description}
           >
-            <div className="flex flex-col items-center space-y-1">
+            <div className="flex flex-col items-center space-y-4">
               <span className="text-lg font-bold">{option.label}</span>
               <span className={`text-xs font-semibold ${contentType === option.value ? 'text-green-100' : 'opacity-70'}`}>
                 {option.value === 'words' ? 'Vocabulary' : 'Irregular'}

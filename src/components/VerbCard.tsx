@@ -39,7 +39,7 @@ const VerbCard: React.FC<VerbCardProps> = ({
     ];
 
     for (const fontOption of fontSizes) {
-      textElement.className = `${fontOption.class} font-bold text-primary-light mb-2`;
+      textElement.className = `${fontOption.class} font-bold text-primary-light mb-4`;
       void textElement.offsetHeight;
 
       if (textElement.scrollWidth <= availableWidth) {
@@ -93,16 +93,16 @@ const VerbCard: React.FC<VerbCardProps> = ({
       ref={containerRef}
       className={`${getFeedbackClasses()} rounded-xl p-8 text-center transition-all duration-300 border-2 animate-slide-up`}
     >
-      <div className="mb-2">
+      <div className="mb-4">
         <span className="text-secondary-light text-sm font-medium uppercase tracking-wide">
           {cardLabel}
         </span>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h2
           ref={textRef}
-          className={`${fontSize} font-bold text-primary-light mb-2 transition-all duration-200`}
+          className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200`}
         >
           {displayWord}
         </h2>

@@ -1,6 +1,7 @@
-import type { UserProgress } from '../types';
+import type { UserProgress, WordPair } from '../types';
 
 const STORAGE_KEY = 'dutch-learning-progress';
+const KNOWN_WORDS_KEY = 'dutch-learning-known-words';
 
 const defaultProgress: UserProgress = {
   correctAnswers: 0,
@@ -129,4 +130,68 @@ export const getHintStats = (progress: UserProgress): {
       recentHintTrend: 0
     };
   }
+};
+
+// Functions for managing known words
+export const loadKnownWords = (): Set<string> => {
+  try {
+    const saved = localStorage.getItem(KNOWN_WORDS_KEY);
+    if (saved) {
+      const knownWords = JSON.parse(saved);
+      return new Set(knownWords);
+    }
+  } catch (error) {
+    console.error('Error loading known words:', error);
+  }
+  return new Set();
+};
+
+export const saveKnownWords = (knownWords: Set<string>): void => {
+  try {
+    const wordsArray = Array.from(knownWords);
+    localStorage.setItem(KNOWN_WORDS_KEY, JSON.stringify(wordsArray));
+  } catch (error) {
+    console.error('Error saving known words:', error);
+  }
+};
+
+export const markWordAsKnown = (word: WordPair): void => {
+  const knownWords = loadKnownWords();
+  const wordKey = `${word.dutch}:${word.english}`;
+  knownWords.add(wordKey);
+  saveKnownWords(knownWords);
+};
+
+export const isWordKnown = (word: WordPair): boolean => {
+  const knownWords = loadKnownWords();
+  const wordKey = `${word.dutch}:${word.english}`;
+  return knownWords.has(wordKey);
+};
+
+export const applyKnownStatusToWords = (words: WordPair[]): WordPair[] => {
+  const knownWords = loadKnownWords();
+  return words.map(word => ({
+    ...word,
+    // Keep CSV "true" values, or check localStorage for additional known words
+    known: word.known || isWordKnown(word)
+  }));
+};
+
+export const getKnownWordsFromStorage = (): WordPair[] => {
+  const knownWordsSet = loadKnownWords();
+  return Array.from(knownWordsSet).map(wordKey => {
+    const [dutch, english] = wordKey.split(':');
+    return {
+      dutch: dutch || '',
+      english: english || '',
+      known: true
+    };
+  }).filter(word => word.dutch && word.english);
+};
+
+export const unmarkWordAsKnown = (word: WordPair): void => {
+  const knownWords = loadKnownWords();
+  const wordKey = `${word.dutch}:${word.english}`;
+  knownWords.delete(wordKey);
+  saveKnownWords(knownWords);
 };

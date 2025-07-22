@@ -60,7 +60,7 @@ const ThemeChooser: React.FC<ThemeChooserProps> = ({
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="
-          absolute top-full right-0 mt-2 w-48 z-50
+          absolute top-full right-0 mt-4 w-48 z-50
           card-bg rounded-lg shadow-xl border border-opacity-20 border-white
           animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden
         ">

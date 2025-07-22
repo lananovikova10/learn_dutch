@@ -1,6 +1,7 @@
 import type { WordPair, LearningMode } from '../types';
 import { shuffleArray } from './csvParser';
 import { generateHint, getInitialHintLevel, isValidHintLevel, type HintLevel } from './hintGenerator';
+import { isWordKnown } from './storage';
 
 export class WordManager {
   private words: WordPair[] = [];
@@ -17,11 +18,25 @@ export class WordManager {
 
   constructor(words: WordPair[]) {
     this.words = words;
+    console.log('WordManager: Total words loaded:', words.length);
+    console.log('WordManager: Known words count:', words.filter(w => w.known).length);
+    console.log('WordManager: First 5 words with known status:', words.slice(0, 5).map(w => ({
+      dutch: w.dutch,
+      english: w.english,
+      known: w.known
+    })));
     this.shuffleWords();
   }
 
+  private getUnknownWords(): WordPair[] {
+    const unknownWords = this.words.filter(word => !word.known);
+    console.log('WordManager: Unknown words count:', unknownWords.length);
+    return unknownWords;
+  }
+
   private shuffleWords(): void {
-    this.shuffledWords = shuffleArray(this.words);
+    const unknownWords = this.getUnknownWords();
+    this.shuffledWords = shuffleArray(unknownWords);
     this.currentIndex = 0;
   }
 
@@ -85,7 +100,37 @@ export class WordManager {
     return this.words.length;
   }
 
+  getUnknownWordsCount(): number {
+    return this.getUnknownWords().length;
+  }
+
+  markWordAsKnown(wordToMark: WordPair): void {
+    // Find the word in the original words array and update it
+    const wordIndex = this.words.findIndex(
+      word => word.dutch === wordToMark.dutch && word.english === wordToMark.english
+    );
+    
+    if (wordIndex !== -1) {
+      this.words[wordIndex] = { ...this.words[wordIndex], known: true };
+      // Re-shuffle to exclude the newly marked word
+      this.shuffleWords();
+      // Reset recent words to avoid issues with filtering
+      this.recentWords = [];
+    }
+  }
+
+  refreshKnownStatus(): void {
+    // Update the known status of all words based on current localStorage
+    this.words = this.words.map(word => ({
+      ...word,
+      // Check localStorage for current known status
+      // This will handle both newly marked and newly unmarked words
+      known: isWordKnown(word)
+    }));
+  }
+
   reset(): void {
+    this.refreshKnownStatus(); // Refresh known status from localStorage
     this.shuffleWords();
     this.recentWords = [];
     this.resetHintState();

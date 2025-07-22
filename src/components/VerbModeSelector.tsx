@@ -19,8 +19,8 @@ const VerbModeSelector: React.FC<VerbModeSelectorProps> = ({
   ];
 
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="card-bg rounded-xl p-2 grid grid-cols-2 gap-2 w-full">
+    <div className="flex flex-col space-y-4">
+      <div className="card-bg rounded-xl p-2 grid grid-cols-2 gap-4 w-full">
         {modes.map((mode) => (
           <button
             key={mode.value}
@@ -37,7 +37,7 @@ const VerbModeSelector: React.FC<VerbModeSelectorProps> = ({
             `}
             title={mode.description}
           >
-            <div className="flex flex-col items-center space-y-1">
+            <div className="flex flex-col items-center space-y-4">
               <span className="text-sm font-bold">{mode.label}</span>
               <span className={`text-xs font-semibold ${verbMode === mode.value ? 'text-purple-100' : 'opacity-70'}`}>
                 {mode.value === 'random' ? 'All' :

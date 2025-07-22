@@ -6,9 +6,10 @@ interface WordCardProps {
   mode: LearningMode;
   feedback: FeedbackType;
   correctAnswer?: string;
+  onMarkAsKnown?: (word: WordPair) => void;
 }
 
-const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer }) => {
+const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer, onMarkAsKnown }) => {
   const textRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('text-4xl md:text-5xl');
@@ -35,7 +36,7 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
 
     // Test each font size until text fits
     for (const fontOption of fontSizes) {
-      textElement.className = `${fontOption.class} font-bold text-primary-light mb-2`;
+      textElement.className = `${fontOption.class} font-bold text-primary-light mb-4`;
 
       // Force reflow to get accurate measurements
       void textElement.offsetHeight;
@@ -63,8 +64,8 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
     // ... existing code ...
   }
 
-  // Show correct answer when feedback is incorrect, otherwise show the original word
-  const displayWord = feedback === 'incorrect' && correctAnswer 
+  // Show correct answer when feedback is present and correctAnswer is available
+  const displayWord = (feedback === 'incorrect' || feedback === 'correct') && correctAnswer 
     ? correctAnswer 
     : mode === 'nl-en' ? word?.dutch : word?.english;
   
@@ -72,8 +73,10 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
   const targetLanguage = mode === 'nl-en' ? 'English' : 'Dutch';
   
   // Show different label when displaying correct answer
-  const cardLabel = feedback === 'incorrect' && correctAnswer
-    ? `Correct Answer: ${targetLanguage}`
+  const cardLabel = (feedback === 'incorrect' || feedback === 'correct') && correctAnswer
+    ? feedback === 'incorrect' 
+      ? `Correct Answer: ${targetLanguage}`
+      : `Translation: ${targetLanguage}`
     : `${sourceLanguage} → ${targetLanguage}`;
 
   const getFeedbackClasses = (): string => {
@@ -87,21 +90,43 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
       }
     };
 
+  const handleMarkAsKnown = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (word && onMarkAsKnown) {
+      // Only trigger the action when checking the box (not unchecking)
+      if (e.target.checked) {
+        onMarkAsKnown({ ...word, known: true });
+      }
+    }
+  };
+
   return (
     <div
       ref={containerRef}
-      className={`${getFeedbackClasses()} rounded-xl p-8 text-center transition-all duration-300 border-2 animate-slide-up`}
+      className={`${getFeedbackClasses()} rounded-xl p-8 text-center transition-all duration-300 border-2 animate-slide-up relative`}
     >
-      <div className="mb-2">
+      {/* Checkbox for marking as known */}
+      {word && onMarkAsKnown && (
+        <div className="absolute top-4 right-4">
+          <input
+            type="checkbox"
+            checked={word.known || false}
+            onChange={handleMarkAsKnown}
+            title="Mark this word as learned"
+            className="w-4 h-4 text-green-600 bg-transparent border-2 border-primary-light rounded focus:ring-green-500 hover:border-green-400 transition-colors cursor-pointer"
+          />
+        </div>
+      )}
+
+      <div className="mb-4">
         <span className="text-secondary-light text-sm font-medium uppercase tracking-wide">
           {cardLabel}
         </span>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h2
           ref={textRef}
-          className={`${fontSize} font-bold text-primary-light mb-2 transition-all duration-200`}
+          className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200`}
         >
           {displayWord}
         </h2>
