@@ -1,5 +1,7 @@
 import type { WordPair, LearningMode, FeedbackType } from '../types';
 import { useRef, useEffect, useState } from 'react';
+import AIHintPopup from './AIHintPopup';
+import { useAIHint } from '../contexts/AIHintContext';
 
 interface WordCardProps {
   word: WordPair | null;
@@ -13,6 +15,11 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
   const textRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('text-4xl md:text-5xl');
+  
+  // AI hint popup state
+  const [showHintPopup, setShowHintPopup] = useState(false);
+  const [hintPosition, setHintPosition] = useState({ x: 0, y: 0 });
+  const { isConfigured, setShowConfigDialog } = useAIHint();
 
   const adjustFontSize = () => {
     if (!textRef.current || !containerRef.current) return;
@@ -99,6 +106,26 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
     }
   };
 
+  const handleWordHover = (e: React.MouseEvent) => {
+    if (!word || feedback !== null) return; // Don't show during feedback
+    
+    if (!isConfigured) {
+      setShowConfigDialog(true);
+      return;
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHintPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top - 10
+    });
+    setShowHintPopup(true);
+  };
+
+  const handleWordLeave = () => {
+    setShowHintPopup(false);
+  };
+
   return (
     <div
       ref={containerRef}
@@ -123,13 +150,39 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
         </span>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <h2
           ref={textRef}
-          className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200`}
+          className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200 cursor-pointer hover:text-blue-300 relative`}
+          onMouseEnter={handleWordHover}
+          onMouseLeave={handleWordLeave}
+          title={isConfigured ? "Hover for AI example sentence" : "Click to configure AI hints"}
         >
           {displayWord}
+          {!isConfigured && (
+            <span className="absolute -top-2 -right-2 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
+          )}
         </h2>
+        
+        {/* AI Hint Popup - positioned absolutely relative to viewport */}
+        {showHintPopup && word && (
+          <div
+            className="fixed z-50"
+            style={{
+              left: `${hintPosition.x}px`,
+              top: `${hintPosition.y}px`,
+              transform: 'translate(-50%, -100%)'
+            }}
+          >
+            <AIHintPopup
+              word={mode === 'nl-en' ? word.dutch : word.english}
+              translation={mode === 'nl-en' ? word.english : word.dutch}
+              mode={mode}
+              isVisible={showHintPopup}
+              onClose={() => setShowHintPopup(false)}
+            />
+          </div>
+        )}
       </div>
 
 

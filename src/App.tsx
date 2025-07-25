@@ -18,6 +18,7 @@ import VerbModeSelector from './components/VerbModeSelector';
 import ProgressIndicator from './components/ProgressIndicator';
 import StatsDashboard from './components/StatsDashboard';
 import ThemeChooser from './components/ThemeChooser';
+import AIHintConfigDialog from './components/AIHintConfigDialog';
 
 function App() {
   const { theme, setTheme } = useTheme();
@@ -536,6 +537,9 @@ function App() {
       <footer className="p-4 text-center text-muted text-sm">
         <p>Built with ❤️ for Dutch language learners • Press Enter to submit answers</p>
       </footer>
+      
+      {/* AI Hint Configuration Dialog */}
+      <AIHintConfigDialog />
     </div>
   );
 }
