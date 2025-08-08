@@ -1,6 +1,7 @@
 import type { UserProgress, WordPair } from '../types';
 import { getAccuracy, getHintStats, getKnownWordsFromStorage, unmarkWordAsKnown } from '../utils/storage';
 import { useState, useEffect } from 'react';
+import { useAIHint } from '../contexts/AIHintContext';
 
 interface StatsDashboardProps {
   progress: UserProgress;
@@ -13,6 +14,7 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ progress, onReset, onKn
     const accuracy = getAccuracy(progress);
     const hintStats = getHintStats(progress);
     const [knownWords, setKnownWords] = useState<WordPair[]>([]);
+    const { isConfigured, clearApiKey, setShowConfigDialog } = useAIHint();
 
     // Load known words from localStorage
     useEffect(() => {
@@ -41,6 +43,18 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ progress, onReset, onKn
       if (onKnownWordUnmarked) {
         onKnownWordUnmarked();
       }
+    };
+
+    // Handle resetting the API key
+    const handleResetApiKey = () => {
+      if (window.confirm('Are you sure you want to reset your Perplexity API key? You will need to enter it again to use AI hints.')) {
+        clearApiKey();
+      }
+    };
+
+    // Handle reconfiguring the API key
+    const handleReconfigureApiKey = () => {
+      setShowConfigDialog(true);
     };
 
   const formatDate = (dateString: string): string => {
@@ -183,6 +197,61 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ progress, onReset, onKn
           )}
         </div>
       )}
+
+      {/* AI Hint Configuration Section */}
+      <div className="mb-4">
+        <h3 className="text-primary font-semibold text-sm mb-4 flex items-center space-x-2">
+          <span>🤖 AI Hint Configuration</span>
+        </h3>
+        <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--stat-box-bg)' }}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <div className={`w-3 h-3 rounded-full ${isConfigured ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                <span className="text-primary font-medium text-sm">
+                  Perplexity API Key
+                </span>
+              </div>
+              <span className="text-xs text-secondary">
+                {isConfigured ? 'Configured' : 'Not configured'}
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              {isConfigured ? (
+                <>
+                  <button
+                    onClick={handleReconfigureApiKey}
+                    className="text-secondary hover:text-primary text-xs hover:scale-105 transition-all duration-200 px-2 py-1 rounded"
+                    title="Update API key"
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={handleResetApiKey}
+                    className="text-red-400 hover:text-red-300 text-xs hover:scale-105 transition-all duration-200 px-2 py-1 rounded"
+                    title="Reset API key"
+                  >
+                    Reset
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={handleReconfigureApiKey}
+                  className="text-secondary hover:text-primary text-xs hover:scale-105 transition-all duration-200 px-2 py-1 rounded"
+                  title="Configure API key"
+                >
+                  Configure
+                </button>
+              )}
+            </div>
+          </div>
+          {!isConfigured && (
+            <div className="mt-3 text-xs text-secondary">
+              Configure your Perplexity API key to enable AI-powered example sentences and hints.
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Known Words Section */}
       <div className="mb-4">

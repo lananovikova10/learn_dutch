@@ -1,5 +1,7 @@
 import type { WordPair, LearningMode, FeedbackType } from '../types';
 import { useRef, useEffect, useState } from 'react';
+import AIHintPopup from './AIHintPopup';
+import { useAIHint } from '../contexts/AIHintContext';
 
 interface WordCardProps {
   word: WordPair | null;
@@ -13,6 +15,12 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
   const textRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('text-4xl md:text-5xl');
+  
+  // AI hint popup state
+  const [showHintPopup, setShowHintPopup] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { isConfigured, setShowConfigDialog } = useAIHint();
 
   const adjustFontSize = () => {
     if (!textRef.current || !containerRef.current) return;
@@ -58,6 +66,15 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
     }
   }, [word, mode, feedback, correctAnswer]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+    };
+  }, [hoverTimeout]);
+
   // ... existing code ...
 
   if (!word) {
@@ -99,6 +116,55 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
     }
   };
 
+  const handleWordHover = (e: React.MouseEvent) => {
+    if (!word || feedback !== null) return; // Don't show during feedback
+    
+    if (!isConfigured) {
+      setShowConfigDialog(true);
+      return;
+    }
+
+    // Track mouse position for tooltip placement
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+
+    // Clear any existing timeout
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+
+    // Small delay to prevent flickering
+    const timeout = setTimeout(() => {
+      setShowHintPopup(true);
+    }, 500); // 500ms delay
+    
+    setHoverTimeout(timeout);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (showHintPopup) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
+
+  const handleWordLeave = () => {
+    // Clear timeout if user leaves before delay completes
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+    
+    // Hide immediately when leaving
+    setShowHintPopup(false);
+  };
+
   return (
     <div
       ref={containerRef}
@@ -123,13 +189,39 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
         </span>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <h2
           ref={textRef}
-          className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200`}
+          className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200 cursor-pointer hover:text-blue-300 relative`}
+          onMouseEnter={handleWordHover}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleWordLeave}
         >
           {displayWord}
+          {!isConfigured && (
+            <span className="absolute -top-2 -right-2 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
+          )}
         </h2>
+        
+        {/* AI Hint Tooltip - positioned above mouse cursor */}
+        {showHintPopup && word && (
+          <div 
+            className="absolute z-50 pointer-events-none"
+            style={{
+              left: `${mousePosition.x}px`,
+              top: `${mousePosition.y - 40}px`,
+              transform: 'translate(-50%, -100%)'
+            }}
+          >
+            <AIHintPopup
+              word={mode === 'nl-en' ? word.dutch : word.english}
+              translation={mode === 'nl-en' ? word.english : word.dutch}
+              mode={mode}
+              isVisible={showHintPopup}
+              onClose={() => setShowHintPopup(false)}
+            />
+          </div>
+        )}
       </div>
 
 
