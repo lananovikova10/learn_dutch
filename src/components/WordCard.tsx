@@ -18,7 +18,8 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
   
   // AI hint popup state
   const [showHintPopup, setShowHintPopup] = useState(false);
-  const [hintPosition, setHintPosition] = useState({ x: 0, y: 0 });
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { isConfigured, setShowConfigDialog } = useAIHint();
 
   const adjustFontSize = () => {
@@ -64,6 +65,15 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
       setTimeout(() => adjustFontSize(), 10);
     }
   }, [word, mode, feedback, correctAnswer]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+    };
+  }, [hoverTimeout]);
 
   // ... existing code ...
 
@@ -114,15 +124,44 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
       return;
     }
 
+    // Track mouse position for tooltip placement
     const rect = e.currentTarget.getBoundingClientRect();
-    setHintPosition({
-      x: rect.left + rect.width / 2,
-      y: rect.top - 10
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
     });
-    setShowHintPopup(true);
+
+    // Clear any existing timeout
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+
+    // Small delay to prevent flickering
+    const timeout = setTimeout(() => {
+      setShowHintPopup(true);
+    }, 500); // 500ms delay
+    
+    setHoverTimeout(timeout);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (showHintPopup) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
   };
 
   const handleWordLeave = () => {
+    // Clear timeout if user leaves before delay completes
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+    
+    // Hide immediately when leaving
     setShowHintPopup(false);
   };
 
@@ -155,8 +194,8 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
           ref={textRef}
           className={`${fontSize} font-bold text-primary-light mb-4 transition-all duration-200 cursor-pointer hover:text-blue-300 relative`}
           onMouseEnter={handleWordHover}
+          onMouseMove={handleMouseMove}
           onMouseLeave={handleWordLeave}
-          title={isConfigured ? "Hover for AI example sentence" : "Click to configure AI hints"}
         >
           {displayWord}
           {!isConfigured && (
@@ -164,13 +203,13 @@ const WordCard: React.FC<WordCardProps> = ({ word, mode, feedback, correctAnswer
           )}
         </h2>
         
-        {/* AI Hint Popup - positioned absolutely relative to viewport */}
+        {/* AI Hint Tooltip - positioned above mouse cursor */}
         {showHintPopup && word && (
-          <div
-            className="fixed z-50"
+          <div 
+            className="absolute z-50 pointer-events-none"
             style={{
-              left: `${hintPosition.x}px`,
-              top: `${hintPosition.y}px`,
+              left: `${mousePosition.x}px`,
+              top: `${mousePosition.y - 40}px`,
               transform: 'translate(-50%, -100%)'
             }}
           >

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { aiHintService } from '../services/aiHintService';
 import type { LearningMode } from '../types';
 
@@ -20,14 +20,21 @@ const AIHintPopup: React.FC<AIHintPopupProps> = ({
   const [exampleSentence, setExampleSentence] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestInProgress = useRef(false);
 
   useEffect(() => {
-    if (isVisible && word && translation) {
+    if (isVisible && word && translation && !exampleSentence && !isLoading && !error && !requestInProgress.current) {
       generateHint();
-    }
-  }, [isVisible, word, translation, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+    } 
+    // Don't reset state when hiding - keep the cached result for next time
+  }, [isVisible, word, translation, mode, exampleSentence, isLoading, error]);
 
   const generateHint = async () => {
+    if (requestInProgress.current) {
+      return; // Already generating, don't start another request
+    }
+    
+    requestInProgress.current = true;
     setIsLoading(true);
     setError(null);
     
@@ -45,6 +52,7 @@ const AIHintPopup: React.FC<AIHintPopupProps> = ({
       console.error('Hint generation error:', err);
     } finally {
       setIsLoading(false);
+      requestInProgress.current = false;
     }
   };
 
@@ -52,53 +60,33 @@ const AIHintPopup: React.FC<AIHintPopupProps> = ({
     return null;
   }
 
-  return (
-    <div className="absolute z-50 bg-gray-900 bg-opacity-95 backdrop-blur-sm rounded-lg p-4 shadow-xl border border-white border-opacity-20 min-w-64 max-w-sm">
-      <div className="space-y-3">
-        <div className="flex items-start justify-between">
-          <h3 className="text-sm font-semibold text-blue-300 uppercase tracking-wide">
-            Example Sentence
-          </h3>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors ml-2"
-              aria-label="Close hint"
-            >
-              ×
-            </button>
-          )}
+  // Simple tooltip - just show the sentence
+  if (isLoading) {
+    return (
+      <div className="bg-gray-800 bg-opacity-90 text-white text-sm px-4 py-2 rounded-md shadow-lg min-w-80 max-w-md animate-fade-in">
+        <div className="flex items-center space-x-2">
+          <div className="animate-spin rounded-full h-3 w-3 border-2 border-blue-300 border-t-transparent"></div>
+          <span>Loading example...</span>
         </div>
-        
-        {isLoading && (
-          <div className="flex items-center space-x-2 text-gray-300">
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-300 border-t-transparent"></div>
-            <span className="text-sm">Generating example...</span>
-          </div>
-        )}
-        
-        {error && (
-          <div className="text-red-400 text-sm">
-            {error}
-          </div>
-        )}
-        
-        {exampleSentence && !isLoading && !error && (
-          <div className="space-y-2">
-            <p className="text-white text-sm leading-relaxed">
-              "{exampleSentence}"
-            </p>
-            <div className="text-xs text-gray-400">
-              Word: <span className="text-blue-300">{word}</span> → <span className="text-green-300">{translation}</span>
-            </div>
-          </div>
-        )}
       </div>
-      
-      {/* Pointer/arrow */}
-      <div className="absolute top-full left-1/2 transform -translate-x-1/2">
-        <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900 border-t-opacity-95"></div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gray-800 bg-opacity-90 text-red-300 text-sm px-4 py-2 rounded-md shadow-lg min-w-80 max-w-md animate-fade-in">
+        Failed to load example
       </div>
+    );
+  }
+
+  if (!exampleSentence) {
+    return null;
+  }
+
+  return (
+    <div className="bg-gray-800 bg-opacity-90 text-white text-sm px-4 py-2 rounded-md shadow-lg min-w-80 max-w-md animate-fade-in">
+      "{exampleSentence}"
     </div>
   );
 };

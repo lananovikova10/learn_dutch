@@ -24,6 +24,7 @@ class AIHintService {
 
   setApiKey(apiKey: string): void {
     this.apiKey = apiKey;
+    console.log('AI Hint: API key set, length:', apiKey.length, 'starts with:', apiKey.substring(0, 10) + '...');
   }
 
   private getCacheKey(word: string, targetLang: 'dutch' | 'english'): string {
@@ -35,7 +36,10 @@ class AIHintService {
     translation: string,
     targetLang: 'dutch' | 'english'
   ): Promise<string> {
+    console.log('AI Hint: Generating example for word:', word, 'translation:', translation, 'targetLang:', targetLang);
+    
     if (!this.apiKey) {
+      console.error('AI Hint: No API key configured');
       throw new Error('API key not configured');
     }
 
@@ -43,13 +47,18 @@ class AIHintService {
     
     // Check cache first
     if (this.cache.has(cacheKey)) {
+      console.log('AI Hint: Found in cache:', this.cache.get(cacheKey));
       return this.cache.get(cacheKey)!;
     }
+
+    console.log('AI Hint: Not in cache, making API request...');
 
     try {
       const prompt = targetLang === 'dutch' 
         ? `Create a simple Dutch sentence using the word "${word}" (which means "${translation}" in English). Return only the sentence, nothing else. Make it beginner-friendly and practical.`
         : `Create a simple English sentence using the word "${word}" (which is "${translation}" in Dutch). Return only the sentence, nothing else. Make it beginner-friendly and practical.`;
+
+      console.log('AI Hint: Using prompt:', prompt);
 
       const response = await fetch(this.baseUrl, {
         method: 'POST',
@@ -58,7 +67,7 @@ class AIHintService {
           'Authorization': `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-small-128k-online',
+          model: 'sonar',
           messages: [
             {
               role: 'user',
@@ -71,16 +80,21 @@ class AIHintService {
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
         throw new Error(`API request failed: ${response.status} ${response.statusText}`);
       }
 
       const data: PerplexityResponse = await response.json();
+      console.log('AI Hint: API Response received:', data);
       
       if (!data.choices || data.choices.length === 0) {
+        console.error('AI Hint: No choices in response');
         throw new Error('No response from AI service');
       }
 
       const sentence = data.choices[0].message.content.trim();
+      console.log('AI Hint: Generated sentence:', sentence);
       
       // Cache the result
       this.cache.set(cacheKey, sentence);
@@ -88,10 +102,10 @@ class AIHintService {
       return sentence;
     } catch (error) {
       console.error('AI service error:', error);
-      // Return a fallback message
+      // Return a simple fallback message without translation
       return targetLang === 'dutch' 
-        ? `Example sentence with "${word}" (${translation})`
-        : `Example sentence with "${word}" (${translation})`;
+        ? `Helaas, een voorbeeld zin kan niet worden gegenereerd.`
+        : `Sorry, unable to generate an example sentence.`;
     }
   }
 
